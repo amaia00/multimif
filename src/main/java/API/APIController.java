@@ -1,4 +1,4 @@
-package Controller;
+package API;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,16 +10,15 @@ import Model.User;
  */
 
 @RestController
+@RequestMapping("/api")
 public class APIController {
 
     @RequestMapping("/add")
     public User user(@RequestParam(value="pseudo") String pseudo,
-                     @RequestParam(value="mail") String mail){
-        return new User(mail, pseudo, "dqsds");
+                     @RequestParam(value="mail") String mail,
+                     @RequestParam(value="haskkey") String hashkey
+    ){
+        return new User(mail, pseudo, hashkey);
     }
 
-    @RequestMapping("/new")
-    public void index(){
-        System.out.println("default");
-    }
 }
