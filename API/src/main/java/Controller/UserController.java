@@ -1,5 +1,6 @@
 package Controller;
 
+import Service.APIService;
 import Util.Status;
 import Model.User;
 import Service.UserService;
@@ -23,7 +24,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")  // /api/user/
+@RequestMapping("/user")
 public class UserController {
     private EntityManager entityManager;
     private UserService userService;
@@ -86,14 +87,6 @@ public class UserController {
 
     @PostConstruct
     public void init(){
-        entityManager = Persistence.createEntityManagerFactory(Constantes.ENTITY_FACTORY)
-                 .createEntityManager();
-
-        userService = new UserServiceImpl(entityManager);
-    }
-
-    @PreDestroy
-    public void destroy(){
-        entityManager.close();
+        userService = new UserServiceImpl();
     }
 }

@@ -92,10 +92,8 @@ public class ProjectController {
 
     @PostConstruct
     public void init(){
-        entityManager = Persistence.createEntityManagerFactory(Constantes.ENTITY_FACTORY)
-                .createEntityManager();
-        projectService = new ProjectServiceImpl(entityManager);
-        userService = new UserServiceImpl(entityManager);
+        projectService = new ProjectServiceImpl();
+        userService = new UserServiceImpl();
     }
 
 

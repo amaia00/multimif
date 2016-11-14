@@ -1,14 +1,17 @@
 package Model;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
 /**
  * Created by Alexis on 17/10/2016.
  */
 @Entity
+@NamedQuery(name="User.findByMail", query="SELECT u from User u WHERE u.mail = :mail")
 public class User implements Serializable {
 
     @Id
@@ -24,6 +27,10 @@ public class User implements Serializable {
 
     @Column(name = "hashkey")
     private String hashkey;
+
+    public User(){
+
+    }
 
     public User(String mail, String pseudo, String hashkey) {
         this.pseudo = pseudo;

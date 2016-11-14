@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import org.springframework.stereotype.Controller;
+
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +22,7 @@ public class TestController {
 
    protected final Log logger = LogFactory.getLog(getClass());
 
-    @RequestMapping(value="/create", method = RequestMethod.GET) // /api/test/create
+    @RequestMapping(value="/create", method = RequestMethod.GET)
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.info("Nouveau test");

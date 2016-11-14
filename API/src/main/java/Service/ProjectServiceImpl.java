@@ -14,8 +14,8 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService{
     ProjectDAO projectDAO;
 
-    public ProjectServiceImpl(EntityManager entityManager){
-        projectDAO = new ProjectDAOImpl(entityManager);
+    public ProjectServiceImpl(){
+        projectDAO = new ProjectDAOImpl(APIService.em);
     }
 
     public boolean addEntity(Project project) throws Exception{

@@ -15,8 +15,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
 
-    public UserServiceImpl(EntityManager entityManager){
-        userDAO = new UserDAOImp(entityManager);
+    public UserServiceImpl(){
+        userDAO = new UserDAOImp(APIService.em);
     }
 
     public boolean addEntity(String pseudo, String mail, String hashkey) throws DataException {
