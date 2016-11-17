@@ -3,25 +3,25 @@ package Service;
 import Util.Constantes;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
  * Created by hadjiszs on 21/10/16.
  */
 public abstract class APIService {
-    private static EntityManager em;
+    public static EntityManagerFactory entityManagerFactory;
 
     private APIService(){
         /* On cache le constructeur */
     }
 
     public static void persistance() {
-        em = Persistence.createEntityManagerFactory(Constantes.ENTITY_FACTORY)
-                .createEntityManager();
+        entityManagerFactory = Persistence.createEntityManagerFactory(Constantes.ENTITY_FACTORY);
     }
 
     public static void close() {
-        em.close();
+        entityManagerFactory.close();
     }
 
     public static EntityManager getEm() {

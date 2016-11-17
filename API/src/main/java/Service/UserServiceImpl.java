@@ -5,6 +5,7 @@ import DAO.UserDAOImp;
 import Model.User;
 import Util.DataException;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,16 +18,22 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = Logger.getLogger( UserServiceImpl.class.getName() );
 
     public UserServiceImpl(){
-        userDAO = new UserDAOImp(APIService.getEm());
+        userDAO = new UserDAOImp();
     }
 
     public Long addEntity(String pseudo, String mail, String hashkey) throws DataException {
         User user = new User(pseudo, mail, hashkey);
-        return userDAO.addEntity(user);
+        userDAO.addEntity(user);
+
+        return  user.getId();
     }
 
     public User getEntityByMail(String mail) throws DataException {
         return userDAO.getEntityByMail(mail);
+    }
+
+    public User getEntityById(Long id) throws DataException {
+        return userDAO.getEntityById(id);
     }
 
     public List getEntityList() throws NullPointerException {

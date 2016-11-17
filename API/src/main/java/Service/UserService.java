@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserService {
     Long addEntity(String pseudo, String mail, String hashkey) throws DataException;
     User getEntityByMail(String mail) throws DataException;
+    User getEntityById(Long id) throws DataException;
+    boolean deleteEntity(String mail) throws DataException;
     List getEntityList() throws NullPointerException;
     boolean deleteEntity(String mail) throws DataException;
 }

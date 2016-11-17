@@ -2,10 +2,8 @@ package Controller;
 
 import Model.Project;
 import Model.User;
-import Service.ProjectService;
-import Service.ProjectServiceImpl;
-import Service.UserService;
-import Service.UserServiceImpl;
+import Model.UserGrant;
+import Service.*;
 import Util.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,20 +25,24 @@ import java.util.logging.Logger;
 @RequestMapping("/project") //api/project
 public class ProjectController {
     private static final Logger LOGGER = Logger.getLogger( ProjectController.class.getName() );
-    private EntityManager entityManager;
     ProjectService projectService ;
     UserService userService;
+    UserGrantService userGrantService;
 
     @RequestMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<String> add(@RequestParam(value = "name") String name,
                                                     @RequestParam(value = "version") String version,
-                                                    @RequestParam(value = "root") String root){
-        Project project = new Project(name, version, root);
+                                                    @RequestParam(value = "root") String root,
+                                                    @RequestParam(value = "type") String type,
+                                                    @RequestParam(value = "user") Long idUser){
+
+        Project project = new Project(name, version, type, root);
         try {
             projectService.addEntity(project);
+            userGrantService.addEntity(idUser, project.getId(), UserGrant.Permis.Admin);
         }catch (DataException ex) {
-            LOGGER.log( Level.FINE, ex.toString(), ex);
-            return new ResponseEntity<String>(Util.convertToJson(new Status(-1, ex.getMessage())), HttpStatus.NOT_FOUND);
+             LOGGER.log( Level.FINE, ex.toString(), ex);
+             return new ResponseEntity<String>(Util.convertToJson(new Status(-1, ex.getMessage())), HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<String>(Util.convertToJson(new StatusOK(Constantes.OPERATION_CODE_REUSSI,
@@ -64,7 +64,7 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/getall", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<String> getAll(@RequestParam(value = "mail") String mail){
+    public @ResponseBody ResponseEntity<String> getall(@RequestParam(value = "mail") String mail){
         List<Project> projects;
 
         try {
@@ -98,12 +98,6 @@ public class ProjectController {
     public void init(){
         projectService = new ProjectServiceImpl();
         userService = new UserServiceImpl();
-    }
-
-
-
-    @PreDestroy
-    public void destroy(){
-        entityManager.close();
+        userGrantService = new UserGrantServiceImpl();
     }
 }

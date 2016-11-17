@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.User;
-import Service.FileService;
+import Service.FichierUtiliseServiceImpl;
 import Service.UserService;
 import Service.UserServiceImpl;
 import Util.DataException;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/file")
 public class FileEditController {
-    private FileService fileService;
+    public FichierUtiliseServiceImpl fichierUtiliseServiceImpl;
     private static final Logger LOGGER = Logger.getLogger( FileEditController.class.getName() );
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,7 +28,7 @@ public class FileEditController {
     ResponseEntity<String> get(@RequestParam(value="id") Long id,
                                @RequestParam(value="projet") String projet) {
 
-        //FileService.get(id, projet);
+        //FichierUtiliseServiceImpl.getEntityById(id, projet);
 
 //        try{
 //            user = userService.getEntityByMail(mail);
@@ -56,7 +56,7 @@ public class FileEditController {
             LOGGER.log( Level.FINE, e.toString(), e);
         }
 
-        fileService.edit(u, id, contenue);
+        fichierUtiliseServiceImpl.editEntity(u, id, contenue);
 
 //        try{
 //            user = userService.getEntityByMail(mail);
@@ -71,6 +71,6 @@ public class FileEditController {
 
     @PostConstruct
     public void init() {
-        fileService = new FileService();
+        fichierUtiliseServiceImpl = new FichierUtiliseServiceImpl();
     }
 }

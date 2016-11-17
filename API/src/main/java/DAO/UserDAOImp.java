@@ -15,15 +15,6 @@ import java.util.logging.Logger;
 public class UserDAOImp extends DAO implements UserDAO {
     private static final Logger LOGGER = Logger.getLogger( UserDAOImp.class.getName() );
     /**
-     * @param em
-     */
-    public UserDAOImp(EntityManager em) {
-
-        super(em);
-
-    }
-
-    /**
      * @param user
      * @return
      * @throws DataException
@@ -38,10 +29,10 @@ public class UserDAOImp extends DAO implements UserDAO {
         }
 
         if (usr == null){
-            em.getTransaction().begin();
-
-            em.persist(user);
-            em.getTransaction().commit();
+            getEntityManager().getTransaction().begin();
+            getEntityManager().persist(user);
+            getEntityManager().getTransaction().commit();
+            closeEntityManager();
 
         } else {
 
@@ -59,7 +50,12 @@ public class UserDAOImp extends DAO implements UserDAO {
      */
     public User getEntityById(Long id) throws DataException {
         User user;
-        user = em.find(User.class, id);
+        try {
+            user = getEntityManager().find(User.class, id);
+        }catch (Exception ex){
+            throw new DataException("User doesn't exist");
+        }finally {
+            closeEntityManager();
 
         return user;
     }
@@ -74,7 +70,7 @@ public class UserDAOImp extends DAO implements UserDAO {
         User user = null;
 
         try {
-            TypedQuery<User> query = em.createNamedQuery("User.findByMail", User.class);
+            TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByMail", User.class);
             query.setParameter("mail", mail);
 
             List<User> list = query.getResultList();
@@ -101,8 +97,10 @@ public class UserDAOImp extends DAO implements UserDAO {
     public List getEntityList() throws NullPointerException {
 
         String query = "SELECT u FROM User u";
-        return em.createQuery(query).getResultList();
+        List list =  getEntityManager().createQuery(query).getResultList();
+        closeEntityManager();
 
+        return list;
     }
 
     /**
@@ -113,9 +111,11 @@ public class UserDAOImp extends DAO implements UserDAO {
     public boolean deleteEntity(String mail) throws DataException {
 
         User user = getEntityByMail(mail);
-        em.getTransaction().begin();
-        em.remove(user);
-        em.getTransaction().commit();
+        getEntityManager().getTransaction().begin();
+        getEntityManager().remove(user);
+        getEntityManager().getTransaction().commit();
+
+        closeEntityManager();
 
         return false;
     }

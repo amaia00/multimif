@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private EntityManager entityManager;
     private UserService userService;
     private static final Logger LOGGER = Logger.getLogger( UserController.class.getName() );
     @RequestMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +70,7 @@ public class UserController {
         return new ResponseEntity<String>(Util.convertListToJson(users), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/remove", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/remove", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<String> remove(@RequestParam(value="mail") String mail){
 
         try{
