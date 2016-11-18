@@ -55,12 +55,14 @@ public class ProjectDAOImpl extends DAO implements ProjectDAO {
 
         try {
             project = getEntityManager().find(Project.class, id);
-        } catch(IllegalArgumentException exception) {
+            System.out.println("project: " + project);
+        } catch(Exception exception) {
             project = null;
             LOGGER.log( Level.FINE, exception.toString(), exception);
         }finally {
             closeEntityManager();
         }
+        closeEntityManager();
 
         if (project == null){
             try {
