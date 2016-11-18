@@ -6,23 +6,18 @@ import Model.Project;
 import Model.User;
 import Model.UserGrant;
 import Util.DataException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by amaia.nazabal on 11/15/16.
  */
 public class UserGrantServiceImpl implements UserGrantService{
     private UserGrantDAO userGrantDAO = new UserGrantDAOImpl();
-    private static final Logger LOGGER = Logger.getLogger( UserGrantServiceImpl.class.getName() );
 
     public UserGrantServiceImpl(){
-        //Vide Constructeur
     }
 
     public boolean addEntity(Long idUser, Long idProject, UserGrant.Permis type) throws DataException {
@@ -35,6 +30,8 @@ public class UserGrantServiceImpl implements UserGrantService{
             ProjectService projectService = new ProjectServiceImpl();
 
             User user = userService.getEntityById(idUser);
+
+
             Project project = projectService.getEntityById(idProject);
 
             grant = new UserGrant();
@@ -47,7 +44,7 @@ public class UserGrantServiceImpl implements UserGrantService{
 
         return true;
     }
-
+/*
     public List getProjectsByEntity(String mail) throws DataException {
         List<Project> projects = new ArrayList();
         ProjectService projectService = new ProjectServiceImpl();
@@ -58,7 +55,6 @@ public class UserGrantServiceImpl implements UserGrantService{
         try{
             user = userService.getEntityByMail(mail);
         }catch(Exception ex) {
-            LOGGER.log( Level.FINE, ex.toString(), ex);
             throw new DataException("User doesn't have any project");
         }
 
@@ -69,12 +65,12 @@ public class UserGrantServiceImpl implements UserGrantService{
                         .getProject().getId()));
             }
         }catch (Exception e){
-            LOGGER.log( Level.FINE, e.toString(), e);
+            e.printStackTrace();
         }
 
 
         return projects;
-    }
+    }*/
 
     public UserGrant getEntityById(Long idUser, Long idProject) throws DataException{
         return userGrantDAO.getEntityById(idUser, idProject);
@@ -85,7 +81,7 @@ public class UserGrantServiceImpl implements UserGrantService{
 
         return result;
     }
-
+/*
     public List getDevelopersByEntity(Long idProject) throws DataException {
         List<User> users = new ArrayList();
         UserService userService = new UserServiceImpl();
@@ -119,5 +115,5 @@ public class UserGrantServiceImpl implements UserGrantService{
         }
 
         return false;
-    }
+    }*/
 }

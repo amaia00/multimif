@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Project;
 import Model.User;
 import Model.UserGrant;
 import Model.UserGrantID;
@@ -8,15 +7,11 @@ import Util.DataException;
 
 import javax.persistence.Query;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by amaia.nazabal on 10/21/16.
  */
 public class UserGrantDAOImpl extends DAO implements UserGrantDAO {
-
-    private static final Logger LOGGER = Logger.getLogger( UserGrantDAOImpl.class.getName() );
 
     public boolean addEntity(UserGrant grant) throws DataException {
         getEntityManager().getTransaction().begin();
@@ -60,7 +55,6 @@ public class UserGrantDAOImpl extends DAO implements UserGrantDAO {
         try {
             grant = getEntityManager().find(UserGrant.class, id);
         } catch (Exception e) {
-            LOGGER.log( Level.FINE, e.toString(), e);
             closeEntityManager();
             throw new DataException("Permis doesn't exists");
         }
@@ -82,9 +76,11 @@ public class UserGrantDAOImpl extends DAO implements UserGrantDAO {
         return userGrant;
     }
 
+
+
     public boolean deleteEntity(UserGrant grant) throws DataException {
         getEntityManager().getTransaction().begin();
-        getEntityManager().remove(grant);
+        getEntityManager().remove(getEntityManager().contains(grant) ? grant : getEntityManager().merge(grant));
         getEntityManager().getTransaction().commit();
 
         closeEntityManager();

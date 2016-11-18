@@ -31,6 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return false;
     }
+
     public Project getEntityById(Long id) throws DataException{
         try {
             return projectDAO.getEntityById(id);
@@ -40,7 +41,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         return null;
     }
-    public List getEntityList(User user) throws DataException{
+
+    public List<Project> getEntityList(User user) throws DataException{
         try {
             return projectDAO.getEntityList(user);
         } catch (Exception e) {
@@ -48,6 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return null;
     }
+/*
     public boolean deleteEntity(Long id) throws DataException{
         try {
             return projectDAO.deleteEntity(id);
@@ -55,6 +58,6 @@ public class ProjectServiceImpl implements ProjectService {
             LOGGER.log( Level.FINE, e.toString(), e);
         }
         return false;
-    }
+    }*/
 
 }
