@@ -82,4 +82,13 @@ public class UtilTest {
 
         System.out.println(content);
     }
+
+    @Test
+    public void testGetBranches() throws Exception {
+        //Recuperation du contenu d'un fichier pour une certaine révision
+        JsonObject branches = Util.getBranches(USER, DIR_NAME);
+
+        Assert.assertNotNull(branches);
+        System.out.println(branches);
+    }
 }
