@@ -62,7 +62,7 @@ public class ProjectController {
         return new ResponseEntity(Util.convertToJson(project), HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/getall", produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@RequestMapping(value = "/getall", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<String> getall(@RequestParam(value = "idUser") Long idUser){
         List<Project> projects = null;
         User user = null;
@@ -75,7 +75,7 @@ public class ProjectController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<String>(Util.convertListToJson(projects), HttpStatus.ACCEPTED);
-    }
+    }*/
 
     @RequestMapping(value = "/remove", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<String> getAll(@RequestParam(value = "id") Long id){

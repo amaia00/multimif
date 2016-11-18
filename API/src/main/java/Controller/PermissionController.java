@@ -1,11 +1,14 @@
 package Controller;
 
 import Model.Project;
+import Model.User;
 import Model.UserGrant;
 import Model.User;
 import Service.UserGrantService;
 import Service.UserGrantServiceImpl;
-import Util.*;
+import Util.Constantes;
+import Util.Status;
+import Util.Util;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -70,20 +73,21 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "/getprojects", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<String> getprojects(@RequestParam(value = "user") Long idUser){
+    public @ResponseBody ResponseEntity<String> getprojects(@RequestParam(value = "idUser") Long id){
         List<Project> projects;
 
         try{
-            projects = userGrantService.getProjectsByEntity(idUser);
+            projects = userGrantService.getProjectsByEntity(id);
         }catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity(Util.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
+            return new ResponseEntity<String>(Util.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
                     Constantes.OPERATION_MSG_RATE)), HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(Util.convertListToJson(projects), HttpStatus.ACCEPTED);
+        return new ResponseEntity<String>(Util.convertListToJson(projects), HttpStatus.ACCEPTED);
     }
 
+/*
     @RequestMapping(value = "/has", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<String> has(@RequestParam(value = "idUser") Long idUser,
                                                     @RequestParam(value = "idProject") Long idProject){
@@ -100,7 +104,7 @@ public class PermissionController {
         result.put("permission", permission);
 
         return new ResponseEntity(result.toString(), HttpStatus.ACCEPTED);
-    }
+    }*/
 
 
     @PostConstruct
