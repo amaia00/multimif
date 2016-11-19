@@ -18,4 +18,5 @@ public class Constantes {
     public static final String OPERATION_MSG_RATE = "Transaction raté";
 
     public static final String ENTITY_FACTORY = "pu-multimif";
+
 }

@@ -16,7 +16,7 @@ public class UserDAOImp extends DAO implements UserDAO {
      * @return
      * @throws DataException
      */
-    public Long addEntity(User user) throws DataException {
+    public User addEntity(User user) throws DataException {
         User usr;
         try{
             usr = getEntityByMail(user.getMail());
@@ -29,13 +29,13 @@ public class UserDAOImp extends DAO implements UserDAO {
             getEntityManager().persist(user);
             getEntityManager().getTransaction().commit();
             closeEntityManager();
-
         } else {
-
+            closeEntityManager();
             throw new DataException("User already exists");
         }
+        closeEntityManager();
 
-        return user.getId();
+        return user;
 
     }
 
@@ -49,11 +49,14 @@ public class UserDAOImp extends DAO implements UserDAO {
         try {
             user = getEntityManager().find(User.class, id);
         }catch (Exception ex){
-            throw new DataException("User doesn't exist");
+            user = null;
         }finally {
             closeEntityManager();
         }
 
+        if (user == null){
+            throw new DataException("User doesn't exist");
+        }
         return user;
     }
 
@@ -74,17 +77,20 @@ public class UserDAOImp extends DAO implements UserDAO {
             if (!list.isEmpty()) {
                 user = list.get(0);
             }
-
         } catch(Exception ex) {
             user = null;
+        }finally {
+            closeEntityManager();
         }
 
         if (user == null){
             throw new DataException("User doesn't exist");
         }
+        closeEntityManager();
 
         return user;
     }
+
 
     /**
      * @return
@@ -96,6 +102,7 @@ public class UserDAOImp extends DAO implements UserDAO {
         List list =  getEntityManager().createQuery(query).getResultList();
         closeEntityManager();
 
+        closeEntityManager();
         return list;
     }
 
@@ -108,9 +115,32 @@ public class UserDAOImp extends DAO implements UserDAO {
         getEntityManager().getTransaction().begin();
         getEntityManager().remove(getEntityManager().contains(user) ? user : getEntityManager().merge(user));
         getEntityManager().getTransaction().commit();
-
         closeEntityManager();
-
         return false;
+    }
+
+    public User authEntity(String username, String password) throws Exception{
+        User user = null;
+
+        try {
+            TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByPseudo", User.class);
+            query.setParameter("username", username);
+
+            List<User> list = query.getResultList();
+            if (!list.isEmpty()) {
+                user = list.get(0);
+            }
+
+        } catch(Exception exception) {
+            exception.printStackTrace();
+            user = null;
+            closeEntityManager();
+        }
+        closeEntityManager();
+        if (user == null || !user.getHashkey().equals(password)){
+            throw new DataException("User doesn't exist");
+        }else{
+            return user;
+        }
     }
 }
