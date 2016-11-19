@@ -83,15 +83,13 @@ public class ProjectControllerTest {
     @Test
     public void getTest(){
         Exception exception = null;
-        ResponseEntity<String > responseEntity = null;
+        ResponseEntity<Project> responseEntity = null;
         Project proj = null;
         projectController.init();
 
         try{
             responseEntity = projectController.get(user.getId());
-
-            JsonUtil<Project> jsonUtil = new JsonUtil<>();
-            proj = jsonUtil.convertToObjectJSON(responseEntity.getBody(), Project.class);
+            proj = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
         }
@@ -161,20 +159,18 @@ public class ProjectControllerTest {
         assertEquals(responseEntity.getStatusCode(), HttpStatus.ACCEPTED);
         assertEquals(status.getCode(), 0);
 
-        ResponseEntity<String > stringResponseEntity = null;
+        ResponseEntity<Project > projectResponseEntity = null;
         Project proj = null;
 
         try{
-            stringResponseEntity = projectController.get(user.getId());
-
-            JsonUtil<Project> jsonUtil = new JsonUtil<>();
-            proj = jsonUtil.convertToObjectJSON(stringResponseEntity.getBody(), Project.class);
+            projectResponseEntity = projectController.get(user.getId());
+            proj = projectResponseEntity.getBody();
         }catch (Exception e){
             exception = e;
         }
 
         assertNull(exception);
-        assertEquals(stringResponseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(projectResponseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
         assertNull(proj);
 
         ResponseEntity<Status> userResponseEntity = null;
