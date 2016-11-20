@@ -1,12 +1,12 @@
 package Controller;
 
-import DAO.EntityFactoryManager;
 import Model.Project;
 import Model.User;
 import Model.UserGrant;
 import Util.JsonUtil;
 import Util.Status;
 import Util.StatusOK;
+import Util.TestUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,47 +33,10 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/api-servlet.xml" })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PermissionControllerTest {
+public class PermissionControllerTest extends TestUtil{
     private PermissionController permissionController = new PermissionController();
     private UserController userController = new UserController();
     private ProjectController projectController = new ProjectController();
-    private static User admin;
-    private static User developper;
-    private static Project project;
-    private static UserGrant userGrant1;
-    private static UserGrant userGrant2;
-
-    @BeforeClass
-    public static void init (){
-        EntityFactoryManager.persistance();
-        admin = new User();
-        admin.setUsername("test-admin");
-        admin.setHashkey("password-admin");
-        admin.setMail("test-admin@test.fr");
-
-        developper = new User();
-        developper.setUsername("test-developper");
-        developper.setHashkey("password-developper");
-        developper.setMail("test-developper@test.fr");
-
-        project = new Project();
-        project.setName("project-test");
-        project.setCreationDate(new Date());
-        project.setLastModification(new Date());
-        project.setVersion("1.0");
-        project.setType(Project.TypeProject.JAVA);
-        project.setRoot("/home/project-test");
-
-        userGrant1 = new UserGrant();
-        userGrant1.setGran(UserGrant.Permis.Admin);
-        userGrant1.setProject(project);
-        userGrant1.setUser(admin);
-
-        userGrant2 = new UserGrant();
-        userGrant2.setGran(UserGrant.Permis.Dev);
-        userGrant2.setProject(project);
-        userGrant2.setUser(developper);
-    }
 
     @Test
     public void addTest(){
@@ -86,28 +50,32 @@ public class PermissionControllerTest {
         projectController.init();
 
         try{
+            newAdmin();
             userResponseEntity = userController.add(admin.getUsername(), admin.getMail(), admin.getHashkey());
-            admin.setId(userResponseEntity.getBody().getId());
+            admin.setIdUser(userResponseEntity.getBody().getIdUser());
 
-            userResponseEntity = userController.add(developper.getUsername(), developper.getMail(),
-                    developper.getHashkey());
-            developper.setId(userResponseEntity.getBody().getId());
+            newDeveloper();
+            userResponseEntity = userController.add(developer.getUsername(), developer.getMail(),
+                    developer.getHashkey());
+            developer.setIdUser(userResponseEntity.getBody().getIdUser());
 
             /* Quand on cree le project implicitament il cree le rapport entre projet et admin */
+            newProject();
             projectResponseEntity = projectController.add(project.getName(), project.getVersion(), project.getRoot(),
-                    project.getType(), admin.getId());
+                    project.getType(), admin.getIdUser());
 
             JsonUtil<StatusOK> jsonUtil = new JsonUtil<>();
             statusOK = jsonUtil.convertToObjectJSON(projectResponseEntity.getBody(), StatusOK.class);
-            project.setId(statusOK.getId());
+            project.setIdProject(statusOK.getId());
 
-            responseEntity = permissionController.add(project.getId(), developper.getId());
+            responseEntity = permissionController.add(project.getIdProject(), developer.getIdUser());
         }catch (Exception e){
+            e.printStackTrace();
             exception = e;
         }
 
         assertNull(exception);
-        assertEquals(userResponseEntity.getStatusCode(), HttpStatus.ACCEPTED);
+        assertEquals(userResponseEntity.getStatusCode(), HttpStatus.CREATED);
         assertEquals(projectResponseEntity.getStatusCode(), HttpStatus.ACCEPTED);
         assertEquals(responseEntity.getStatusCode(), HttpStatus.ACCEPTED);
     }
@@ -121,7 +89,7 @@ public class PermissionControllerTest {
 
         try{
             permissionController.init();
-            responseEntity = permissionController.getDevelopers(project.getId());
+            responseEntity = permissionController.getDevelopers(project.getIdProject());
             userList = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -131,7 +99,7 @@ public class PermissionControllerTest {
         assertEquals(responseEntity.getStatusCode(), HttpStatus.ACCEPTED);
 
         try {
-            user = userList.stream().filter(u -> u.getId().equals(developper.getId()))
+            user = userList.stream().filter(u -> u.getIdUser().equals(developer.getIdUser()))
                     .findFirst().get();
         }catch (Exception e){
             exception = e;
@@ -139,10 +107,10 @@ public class PermissionControllerTest {
 
         assertNull(exception);
         assertNotNull(user);
-        assertEquals(user.getId(), developper.getId());
-        assertEquals(user.getMail(), developper.getMail());
-        assertEquals(user.getUsername(), developper.getUsername());
-        assertEquals(user.getHashkey(), developper.getHashkey());
+        assertEquals(user.getIdUser(), developer.getIdUser());
+        assertEquals(user.getMail(), developer.getMail());
+        assertEquals(user.getUsername(), developer.getUsername());
+        assertEquals(user.getHashkey(), developer.getHashkey());
     }
 
     @Test
@@ -153,7 +121,7 @@ public class PermissionControllerTest {
 
         try{
             permissionController.init();
-            responseEntity = permissionController.getAdmin(project.getId());
+            responseEntity = permissionController.getAdmin(project.getIdProject());
             user = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -161,7 +129,7 @@ public class PermissionControllerTest {
         assertNull(exception);
         assertNotNull(user);
         assertEquals(responseEntity.getStatusCode(), HttpStatus.ACCEPTED);
-        assertEquals(user.getId(), admin.getId());
+        assertEquals(user.getIdUser(), admin.getIdUser());
         assertEquals(user.getMail(), admin.getMail());
         assertEquals(user.getUsername(), admin.getUsername());
         assertEquals(user.getHashkey(), admin.getHashkey());
@@ -176,7 +144,7 @@ public class PermissionControllerTest {
 
         try{
             permissionController.init();
-            responseEntity = permissionController.getProjects(admin.getId());
+            responseEntity = permissionController.getProjects(admin.getIdUser());
             projectList = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -186,11 +154,16 @@ public class PermissionControllerTest {
         assertNotNull(projectList);
         assertEquals(responseEntity.getStatusCode(), HttpStatus.ACCEPTED);
 
-        proj = projectList.stream().filter(p-> p.getId().equals(project.getId()))
-                .findFirst().get();
+        try {
+            proj = projectList.stream().filter(p -> p.getIdProject().equals(project.getIdProject()))
+                    .findFirst().get();
+        }catch (NoSuchElementException e){
+            exception = e;
+        }
 
+        assertNull(exception);
         assertNotNull(proj);
-        assertEquals(proj.getId(), project.getId());
+        assertEquals(proj.getIdProject(), project.getIdProject());
         assertEquals(proj.getName(), project.getName());
         assertEquals(proj.getType(), project.getType());
         assertEquals(proj.getVersion(), project.getVersion());
@@ -205,7 +178,7 @@ public class PermissionControllerTest {
 
         try{
             permissionController.init();
-            responseEntity = permissionController.has(admin.getId(), project.getId());
+            responseEntity = permissionController.has(admin.getIdUser(), project.getIdProject());
 
             System.out.print(responseEntity.getBody());
         }catch (Exception e){
@@ -217,7 +190,7 @@ public class PermissionControllerTest {
 
 
         try{
-            responseEntity = permissionController.has(developper.getId(), project.getId());
+            responseEntity = permissionController.has(developer.getIdUser(), project.getIdProject());
 
             System.out.print(responseEntity.getBody());
         }catch (Exception e){
@@ -236,7 +209,7 @@ public class PermissionControllerTest {
         ResponseEntity<String> projectResponseEntity = null;
         try{
             permissionController.init();
-            responseEntity = permissionController.remove(developper.getId(), project.getId());
+            responseEntity = permissionController.remove(developer.getIdUser(), project.getIdProject());
             status = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -249,7 +222,7 @@ public class PermissionControllerTest {
         /* On ne permet pas supprimer le permis de l'admin du projet*/
         try{
             permissionController.init();
-            responseEntity = permissionController.remove(admin.getId(), project.getId());
+            responseEntity = permissionController.remove(admin.getIdUser(), project.getIdProject());
             status = responseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -261,7 +234,7 @@ public class PermissionControllerTest {
 
         try{
             projectController.init();
-            projectResponseEntity = projectController.remove(project.getId(), admin.getId());
+            projectResponseEntity = projectController.remove(project.getIdProject(), admin.getIdUser());
 
             JsonUtil<Status> jsonUtil = new JsonUtil<>();
             status = jsonUtil.convertToObjectJSON(projectResponseEntity.getBody(), Status.class);
@@ -276,7 +249,7 @@ public class PermissionControllerTest {
         ResponseEntity<Status> userResponseEntity = null;
         userController.init();
         try{
-            userResponseEntity = userController.remove(admin.getId());
+            userResponseEntity = userController.remove(admin.getIdUser());
             status = userResponseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -287,7 +260,7 @@ public class PermissionControllerTest {
         assertEquals(status.getCode(), 0);
 
         try{
-            userResponseEntity = userController.remove(developper.getId());
+            userResponseEntity = userController.remove(developer.getIdUser());
             status = userResponseEntity.getBody();
         }catch (Exception e){
             exception = e;
@@ -296,11 +269,5 @@ public class PermissionControllerTest {
         assertNull(exception);
         assertEquals(userResponseEntity.getStatusCode(), HttpStatus.ACCEPTED);
         assertEquals(status.getCode(), 0);
-    }
-
-
-    @AfterClass
-    public static void close (){
-        EntityFactoryManager.close();
     }
 }
