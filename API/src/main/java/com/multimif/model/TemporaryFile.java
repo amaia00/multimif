@@ -25,8 +25,10 @@ public class TemporaryFile implements Serializable {
     @Column(length = 100, unique = true, nullable = false)
     private String hashKey;
 
+    @Transient
     private String name;
 
+    @Transient
     private String extension;
 
     @Lob
