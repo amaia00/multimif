@@ -23,7 +23,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" type="text/css" href="../ressources/CSS/edit.css">
-        <link href="../ressources/img/favicon.ico" rel="icon" type="image/x-icon" />
+        <link href="../ressources/img/favicon.png" rel="icon" type="image/x-icon" />
         <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -34,6 +34,7 @@
         <link rel="stylesheet" href="../codeMirror/theme/night.css">
         <link rel="stylesheet" href="../codeMirror/theme/dracula.css">
         <link rel="stylesheet" href="../codeMirror/theme/solarized.css">
+        <link rel="stylesheet" href="../codeMirror/theme/rubyblue.css">
         <script src="../codeMirror/mode/clike/clike.js"></script>
 
         <!-- Script perso -->
@@ -92,6 +93,7 @@
                     <div class="btn-group">
                         <select id="listBranch">
                             <option value="">Branche:</option>
+                      
                         </select>
                     </div>
                     <div class="btn-group">
@@ -100,12 +102,13 @@
                         </select>
                     </div>
                     <div class="btn-group">
+
                         <button type="button" class="btn btn-default" id="autoIndent">Tout Indenter</button>
-                        <button type="button" class="btn btn-default" id="compile">Compiler</button>
                         <button type="button" class="btn btn-default" id="createBranch">Créer une branche</button>
                         <button type="button" class="btn btn-default" id="createFile">Créer un fichier</button>
                         <button type="button" class="btn btn-default" id="createDir">Créer un dossier</button>
-                        <input  type="button" class="btn btn-default" id="commit"  value="Commit" data-toggle="modal" data-target="#fenetreCommit"/>
+                        <input  type="button" class="btn btn-default" id="commitBtn"  value="Commit" data-toggle="modal" data-target="#fenetreCommit"/>
+                        <button type="button" class="btn btn-default" id="btnCompiler">Compiler</button>
                     </div>
                 </div>
             </aside>
@@ -140,10 +143,13 @@ return member;
 
             <!-- Sortie de compilation -->
             <section class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                        <p> Rien pour le moment</p>
+                <div class="col-lg-8 col-lg-offset-2" id="divCompilation">
+                    <div id="contenuCompilation">
+                        <p> Sortie du compilateur</p>
+                    </div>
                 </div>
             </section>
+            <!-- Fin compilation -->
 
             <a id="ancrePanelDroite" aria-label="Panel deroulant">
                 <span class="glyphicon glyphicon-chevron-left" id="chevronAncreDroite" aria-hidden="true"></span>
