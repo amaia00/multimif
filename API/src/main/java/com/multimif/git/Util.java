@@ -1,16 +1,16 @@
 package com.multimif.git;
 
-import com.multimif.util.ArboNode;
-import com.multimif.util.ArboTree;
+import com.multimif.model.TemporaryFile;
+import com.multimif.model.User;
+import com.multimif.service.TemporaryFileService;
+import com.multimif.util.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -23,12 +23,12 @@ import org.gitective.core.BlobUtils;
 import org.gitective.core.CommitUtils;
 
 import javax.json.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.eclipse.jgit.lib.Constants.HEAD;
 
@@ -40,6 +40,13 @@ import static org.eclipse.jgit.lib.Constants.HEAD;
 
 public class Util {
 
+    private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
+
+
+    private Util(){
+        /* On cache le constructeur parce qu'il s'agit d'une classe utilitaire */
+    }
+
     /**
      * Recupere l'arborescence associé à un commit sujet
      *
@@ -50,47 +57,41 @@ public class Util {
      */
     public static JsonObject getArborescence(String creator,
                                              String repository,
-                                             String revision) {
+                                             String revision, List<TemporaryFile> list,
+                                             boolean usetemporaryFiles) {
 
         try {
             //En local, les repo sont stockés dans REPOPATH/[createur]/[id_du_repo]
-            String path = Constantes.REPO_FULLPATH + creator + "/" + repository + ".git";
-            System.out.println("CHEMIN:" + path);
+            String path = GitConstantes.REPO_FULLPATH + creator + "/" + repository + ".git";
             Git git = Git.open(new File(path));
 
             // a RevWalk allows to walk over commits based on some filtering that is defined
-            try  {
-                RevWalk walk = new RevWalk(git.getRepository());
-                RevCommit commit = CommitUtils.getCommit(git.getRepository(), revision);
-                System.out.println(commit.toString());
-                if (commit == null) {
-                    throw new Exception("Can't find the given revision in the current repository");
-                }
+            RevCommit commit = CommitUtils.getCommit(git.getRepository(), revision);
+            RevTree tree = commit.getTree();
 
-                RevTree tree = commit.getTree();
+            // we use a TreeWalk to iterate over all files in the Tree recursively
 
-                // we use a TreeWalk to iterate over all files in the Tree recursively
-                try {
-                    TreeWalk treeWalk = new TreeWalk(git.getRepository());
-                    treeWalk.addTree(tree);
-                    treeWalk.setRecursive(true);
+            TreeWalk treeWalk = new TreeWalk(git.getRepository());
+            treeWalk.addTree(tree);
+            treeWalk.setRecursive(true);
 
-                    //On créé un objet ArboTree contenant l'arborescence voulue
-                    ArboTree arborescence = new ArboTree(new ArboNode("root", "root"));
-                    while (treeWalk.next()) {
-                        arborescence.addElement(treeWalk.getPathString());
-                    }
-                    //On convertit cet objet en Json
-                    return arborescence.toJson();
-
-                } catch (Exception e) {
-                    throw e;
-                }
-            } catch(Exception e) {
-                throw e;
+            //On créé un objet ArboTree contenant l'arborescence voulue
+            ArboTree arborescence = new ArboTree(new ArboNode("root", "root"));
+            while (treeWalk.next()) {
+                arborescence.addElement(treeWalk.getPathString());
             }
+            if (usetemporaryFiles && list != null) {
+                for (TemporaryFile file : list) {
+                    if (!arborescence.existElement("root/" + file.getPath())) {
+                        arborescence.addElement(file.getPath());
+                    }
+                }
+            }
+            //On convertit cet objet en Json
+            return arborescence.toJson();
+
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.FINE, e.getMessage(), e);
             return null;
         }
 
@@ -101,18 +102,20 @@ public class Util {
      *
      * @param dir le dossier à supprimer
      * @return true si la suppression a été effectuée correctement, false sinon
+     * @throws DataException retourne une exception si le fichier n'a pas été supprimé.
      */
-    private static boolean deleteDirectory(File dir) {
+    private static boolean deleteDirectory(File dir) throws DataException {
         if (!dir.exists() || !dir.isDirectory()) {
             return false;
         }
         String[] files = dir.list();
-        for (int i = 0, len = files.length; i < len; i++) {
-            File f = new File(dir, files[i]);
+        for (String file : files != null ? files : new String[0]) {
+            File f = new File(dir, file);
             if (f.isDirectory()) {
                 deleteDirectory(f);
             } else {
-                f.delete();
+                if (!f.delete())
+                    throw new DataException("The file has not been deleted");
             }
         }
         return dir.delete();
@@ -124,12 +127,11 @@ public class Util {
      * @param creator l'id de l'utilisateur qui a créé le dépot
      * @param repository l'id du repo
      * @return True si le repo a été supprimé, false sinon
+     * @throws DataException
      */
     public static boolean deleteRepository(String creator,
-                                           String repository) {
-        String path = Constantes.REPO_FULLPATH + creator + "/" + repository + ".git";
-        System.out.println("CHEMIN:" + path);
-
+                                           String repository) throws DataException {
+        String path = getGitRepo(creator, repository);
         File dir = new File(path);
 
         return deleteDirectory(dir);
@@ -143,26 +145,31 @@ public class Util {
      * @param remoteURL URL du repo distant
      * @throws Exception
      */
-    public static void cloneRemoteRepo(String creator,
+    public static JsonObject cloneRemoteRepo(String creator,
                                        String newRepo,
-                                       String remoteURL) throws Exception {
+                                       String remoteURL) throws DataException {
+
+        String repository;
         if (newRepo == null) {
-            String[] list = remoteURL.split("/");
-            newRepo = list[list.length - 1];
-        }
+            String[] list = remoteURL.split(File.separator);
+            repository = list[list.length - 1];
+        } else
+            repository = newRepo;
 
+        JsonBuilderFactory factory = Json.createBuilderFactory(null);
         // prepare a new folder for the cloned repository
-        String path = Constantes.REPO_FULLPATH + creator + "/" + newRepo + ".git";
-        System.out.println("CHEMIN:" + path);
-
+        String path = getGitRepo(creator, repository);
         File localPath = new File(path);
-
         // then clone
-        System.out.println("Cloning from " + remoteURL + " to " + localPath);
-        Git git = Git.cloneRepository()
-                .setURI(remoteURL)
-                .setDirectory(localPath)
-                .call();
+        try {
+            Git.cloneRepository().setURI(remoteURL)
+                    .setDirectory(localPath)
+                    .call();
+        } catch (GitAPIException e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.GIT_CANT_CLONE_REPOSITORY);
+        }
+        return factory.createObjectBuilder().add("result", GitStatus.CLONE_SUCCESS.toString()).build();
     }
 
     /**
@@ -173,21 +180,20 @@ public class Util {
      * @param revision
      * @param path
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     public static JsonObject getContent(String creator,
                                         String repo,
                                         String revision,
-                                        String path) throws Exception {
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
+                                        String path) throws IOException {
+        String pathRepo = getGitRepo(creator, repo);
         Git git = Git.open(new File(pathRepo));
 
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
-        JsonObject ret = factory.createObjectBuilder()
+
+        return factory.createObjectBuilder()
                 .add("content", BlobUtils.getContent(git.getRepository(), revision, path))
                 .build();
-        return ret;
     }
 
     /**
@@ -199,44 +205,59 @@ public class Util {
      * @param repo    nom du depot
      * @param branch  nom de la branche à créer
      * @return un code de réponse renvoyé un json
-     * @throws Exception
+     * @throws DataException retourne une exception si le dépôt n'existe pas
      */
     public static JsonObject createBranch(String creator,
                                           String repo,
-                                          String branch) throws Exception {
+                                          String branch) throws DataException {
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
         GitStatus status;
 
         // Ouverture du depot
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
-        Git git = Git.open(new File(pathRepo));
+        String pathRepo = getGitRepo(creator, repo);
+        Git git;
+        try {
+            git = Git.open(new File(pathRepo));
+        } catch (IOException e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.GIT_CANT_OPEN_REPOSITORY);
+        }
 
         // Verification que le nom de branche n'existe pas deja dans le depot
         boolean branchExiste = false;
+
         // Verifier que la branche n existe pas deja
-        List<Ref> refs = git.branchList().call();
-        for(Ref ref : refs) {
-            if(ref.getName().equals("refs/heads/"+ branch)) {
+        List<Ref> refs;
+        try {
+            refs = git.branchList().call();
+        } catch (GitAPIException e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.GIT_CANT_LIST_BRANCH);
+        }
+        for (Ref ref : refs) {
+            if (ref.getName().equals("refs/heads/" + branch)) {
                 branchExiste = true;
                 break;
             }
         }
 
-        if(branchExiste == false) {
+        if (!branchExiste) {
             status = GitStatus.BRANCH_CREATED;
             // On cree la branche
-            git.branchCreate()
-                    .setName(branch)
-                    .call();
+            try {
+                git.branchCreate()
+                        .setName(branch)
+                        .call();
+            }catch (Exception e){
+                LOGGER.log(Level.FINE, e.getMessage(), e);
+                throw new DataException(Messages.GIT_BRANCH_CANT_CREATED);
+            }
         } else
             status = GitStatus.BRANCH_NOT_CREATED;
 
-        JsonObject ret = factory.createObjectBuilder()
+        return factory.createObjectBuilder()
                 .add("code", status.getValue())
                 .build();
-
-        return ret;
     }
 
 
@@ -254,8 +275,7 @@ public class Util {
         GitStatus status = GitStatus.REPOSITORY_NOT_CREATED;
 
         // Chemin vers le nouveau repository
-        String path = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + path);
+        String path = getGitRepo(creator, repo);
         File localPath = new File(path);
 
         // Création du dépot
@@ -278,11 +298,10 @@ public class Util {
                 .setMessage("add .README")
                 .call();
 
-        JsonObject ret = factory.createObjectBuilder()
+
+        return factory.createObjectBuilder()
                 .add("code", status.getValue())
                 .build();
-
-        return ret;
     }
 
     /**
@@ -304,8 +323,7 @@ public class Util {
         DiffFormatter formatter = new DiffFormatter(baos);
 
         // Ouverture du depot
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
+        String pathRepo = getGitRepo(creator, repo);
         Git git = Git.open(new File(pathRepo));
         Repository repository = git.getRepository();
 
@@ -317,7 +335,7 @@ public class Util {
         AbstractTreeIterator oldTreeParser = prepareTreeParser(repository, commit);
 
         // Pour chaque commit parent du commit sujet, on recupere le diff
-        for(RevCommit parent : commit.getParents()) {
+        for (RevCommit parent : commit.getParents()) {
             AbstractTreeIterator newTreeParser = prepareTreeParser(repository, parent);
 
             List<DiffEntry> diff = git.diff()
@@ -330,16 +348,72 @@ public class Util {
                 formatter.format(entry);
         }
 
-        JsonObject ret = factory.createObjectBuilder()
-                .add("result", baos.toString( String.valueOf(Charset.defaultCharset())) )
+        return factory.createObjectBuilder()
+                .add("result", baos.toString(String.valueOf(Charset.defaultCharset())))
                 .build();
+    }
+    /**
+     ** @param creator le proprietaire du dépôt
+     * @param repo le dépôt le dépôt
+     * @param branch le nom de la branche
+     * @return un objet json avec le nom du fichier
+     * @throws DataException retourne un exception si le dépôt n'existe pas
+     */
+    public static JsonObject getArchive(String creator, String repo, String branch) throws DataException {
+        JsonBuilderFactory factory = Json.createBuilderFactory(null);
+        Git git;
+        String pathRepository = getGitRepo(creator, repo);
+        System.out.println(pathRepository);
+        String zipName = repo + GitConstantes.ZIP_EXTENSION;
 
-        return ret;
+        try {
+            git = Git.open(new File(pathRepository));
+
+            git.checkout().setCreateBranch(false)
+                    .setName(branch)
+                    .call();
+
+            String zip = getZipFile(creator, repo);
+            ZipUtil.compress(pathRepository, zip);
+            ZipUtil.moveZipFile(zip, zipName);
+
+        } catch (IOException | GitAPIException e) {
+            LOGGER.log(Level.OFF, e.getMessage(), e);
+            throw new DataException(Messages.GIT_REPOSITORY_NOT_EXISTS);
+        }
+
+        return factory.createObjectBuilder()
+                .add("file", zipName)
+                .build();
     }
 
     /**
+     * Retourne le path du repository
      *
-     * @param repository
+     * @param creator le proprietaire du dépôt, le pseudo de l'utilisateur
+     * @param repo le dépôt le dépôt
+     * @return l'addresse du dépôt
+     */
+    private static String getGitRepo(String creator, String repo) {
+        return new StringBuilder().append(GitConstantes.REPO_FULLPATH)
+                .append(creator).append(File.separator).append(repo).append(GitConstantes.GIT_EXTENSION).toString();
+    }
+
+
+    /**
+     * Retourne l'addresse et le nom du fichier ZIP
+     *
+     * @param creator le proprietaire du dépôt, le pseudo de l'utilisateur
+     * @param repo le dépôt le dépôt   le dépôt
+     * @return l'addresse du fichier ZIP
+     */
+    private static String getZipFile(String creator, String repo) {
+        return new StringBuilder().append(GitConstantes.REPO_FULLPATH).append(creator)
+                .append(File.separator).append(repo).append(GitConstantes.ZIP_EXTENSION).toString();
+    }
+
+    /**
+     * @param repository le dépôt
      * @param objectId
      * @return
      * @throws IOException
@@ -361,24 +435,21 @@ public class Util {
     }
 
     /**
-     *
-     * @param creator
-     * @param repo
+     * @param creator le proprietaire du dépôt
+     * @param repo le dépôt
      * @return
      * @throws Exception
      */
-    public static  JsonObject getBranches(String creator,
-                                          String repo) throws Exception {
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
+    public static JsonObject getBranches(String creator,
+                                         String repo) throws Exception {
+        String pathRepo = getGitRepo(creator, repo);
         Git git = Git.open(new File(pathRepo));
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
 
         List<Ref> call = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
         JsonArrayBuilder build = factory.createArrayBuilder();
 
-        for(Ref ref : call) {
-            //System.out.println(ref.getName());
+        for (Ref ref : call) {
             build.add(factory.createObjectBuilder().add("name", ref.getName()));
         }
 
@@ -386,26 +457,36 @@ public class Util {
     }
 
     /**
-     *
-     * @param creator
-     * @param repo
-     * @param branch
+     * @param creator le proprietaire du dépôt
+     * @param repo le dépôt
+     * @param branch le nom de la branche
      * @return
-     * @throws Exception
+     * @throws DataException
      */
     public static JsonObject getCommits(String creator,
                                         String repo,
-                                        String branch) throws  Exception {
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
-        Git git = Git.open(new File(pathRepo));
+                                        String branch) throws DataException {
+        String pathRepo = getGitRepo(creator, repo);
+        Git git;
+        try {
+            git = Git.open(new File(pathRepo));
+        } catch (IOException e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.GIT_CANT_OPEN_REPOSITORY);
+        }
+
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
-        Iterable<RevCommit> commits = git.log().all().call();
         JsonArrayBuilder build = factory.createArrayBuilder();
 
-        Iterable<RevCommit> revCommits = git.log()
-                .add(git.getRepository().resolve(branch))
-                .call();
+        Iterable<RevCommit> revCommits;
+        try {
+            revCommits = git.log()
+                    .add(git.getRepository().resolve(branch))
+                    .call();
+        } catch (IOException | GitAPIException e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.GIT_LOG_ERROR);
+        }
 
         for(RevCommit revCommit : revCommits){
             build.add(factory.createObjectBuilder()
@@ -422,8 +503,16 @@ public class Util {
         return factory.createObjectBuilder().add("commits", build).build();
     }
 
+    /**
+     * @param creator le proprietaire du dépôt
+     * @param repo le dépôt
+     * @param nomBranch1 e nom de la branche1
+     * @param branch2 le nom de la branche2
+     * @return
+     * @throws Exception
+     */
     public static JsonObject merge(String creator, String repo, String nomBranch1, String branch2) throws Exception {
-        Git git = Git.open(new File(Constantes.REPOPATH + creator + "/" + repo + ".git"));
+        Git git = Git.open(new File(GitConstantes.REPOPATH + creator + "/" + repo + ".git"));
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
 
         // Recuperation du RevCommit associé au commit sujet
@@ -457,12 +546,13 @@ public class Util {
             Map<String, int[][]> conflicts = result.getConflicts();
 
             JsonArrayBuilder files = factory.createArrayBuilder();
+            /*TODO refactor */
             for (String path : conflicts.keySet()) {
                 int[][] c = conflicts.get(path);
                 JsonArrayBuilder conflictList = factory.createArrayBuilder();
                 for (int i = 0; i < c.length; ++i) {
                     JsonArrayBuilder details = factory.createArrayBuilder();
-                    for (int j = 0; j < (c[i].length) - 1; ++j) {
+                     for (int j = 0; j < (c[i].length) - 1; ++j) {
                         if (c[i][j] >= 0) {
                             details.add(factory.createObjectBuilder()
                                     .add("commit", result.getMergedCommits()[j].getName())
@@ -486,9 +576,16 @@ public class Util {
         return res.build();
     }
 
+    /**
+     * @param creator le proprietaire du dépôt
+     * @param repo le dépôt
+     * @param revision la revision spécifiée
+     * @return
+     * @throws IOException
+     */
     public static JsonObject getInfoCommit(String creator, String repo, String revision) throws IOException {
-        String pathRepo = Constantes.REPO_FULLPATH + creator + "/" + repo + ".git";
-        System.out.println("CHEMIN:" + pathRepo);
+
+        String pathRepo = getGitRepo(creator, repo);
         Git git = Git.open(new File(pathRepo));
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
         JsonArrayBuilder build = factory.createArrayBuilder();
@@ -506,5 +603,62 @@ public class Util {
         );
 
         return factory.createObjectBuilder().add("information", build).build();
+    }
+
+    public static JsonObject makeCommit(String author, String repository, String branch, User commiter, List<TemporaryFile> files, String message) throws Exception {
+        String pathRepo = GitConstantes.REPO_FULLPATH + author + "/" + repository + ".git";
+        Git git = Git.open(new File(pathRepo));
+        JsonBuilderFactory factory = Json.createBuilderFactory(null);
+        JsonObjectBuilder builder = factory.createObjectBuilder();
+        try {
+            git.checkout()
+                    .setCreateBranch(false)
+                    .setName(branch)
+                    .call();
+
+            PrintStream output;
+        int i =0;
+            for (TemporaryFile file : files) {
+                //File newFile = new File(file.getPath());
+                //newFile.createNewFile();
+                //System.out.println(file.getPath());
+                output = new PrintStream(new FileOutputStream(file.getPath()));
+                output.print(file.getContent());
+                git.add()
+                        .addFilepattern(file.getPath())
+                        .call();
+                i++;
+            }
+            RevCommit newCommit = git.commit()
+                    .setAuthor(commiter.getUsername(), commiter.getMail())
+                    .setMessage(message)
+                    .call();
+            //System.out.println(CommitUtils.getHead(git.getRepository()).getFullMessage());
+            //System.out.println(getArborescence(author, repository, CommitUtils.getHead(git.getRepository()).getName()));
+            builder.add("result", GitStatus.COMMIT_DONE.toString());
+            builder.add("new_commit_id", newCommit.getName());
+            return builder.build();
+        } catch (Exception e) {
+            return builder.add("result", GitStatus.COMMIT_FAILED.toString()).build();
+        }
+    }
+
+    public static JsonObject getBranch(String author, String repository, String commitId) throws Exception {
+        JsonBuilderFactory factory = Json.createBuilderFactory(null);
+        JsonObjectBuilder builder = factory.createObjectBuilder();
+
+        String pathRepo = GitConstantes.REPO_FULLPATH + author + "/" + repository + ".git";
+        Git git = Git.open(new File(pathRepo));
+        RevWalk walk = new RevWalk(git.getRepository());
+        RevCommit commit = walk.parseCommit(git.getRepository().resolve(commitId + "^0"));
+        JsonArrayBuilder array = factory.createArrayBuilder();
+        for (Map.Entry<String, Ref> e : git.getRepository().getAllRefs().entrySet()) {
+            if (e.getKey().startsWith(Constants.R_HEADS)) {
+                if (walk.isMergedInto(commit, walk.parseCommit(e.getValue().getObjectId()))) {
+                    array.add(factory.createObjectBuilder().add("branch", e.getValue().getName()));
+                }
+            }
+        }
+        return builder.add("branches", array).build();
     }
 }

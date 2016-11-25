@@ -20,29 +20,22 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since 1.0 19/10/16.
  */
-
 public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
     private static final Logger LOGGER = Logger.getLogger(TemporaryFileDAOImpl.class.getName());
 
     @Override
-    public TemporaryFile getEntityByHashKeyAndUser(User user, String hashKey) throws DataException {
+    public TemporaryFile getEntityByHashKey(String hashKey) throws DataException {
+
         TemporaryFile file = null;
-        TypedQuery<TemporaryFile> query = getEntityManager().createNamedQuery("TemporaryFile.findByIdAndUser",
-                TemporaryFile.class);
-        query.setParameter("user", user);
+        TypedQuery<TemporaryFile> query = getEntityManager().createNamedQuery("TemporaryFile.findByHashkey", TemporaryFile.class);
         query.setParameter("hashKey", hashKey);
 
         try {
             file = query.getSingleResult();
-        } catch (NoResultException e) {
-            LOGGER.log(Level.OFF, e.toString(), e);
-            throw new DataException(Messages.FILE_NOT_EXISTS);
+        } catch(NoResultException e) {
+            file = null;
         } finally {
             closeEntityManager();
-        }
-
-        if (file == null){
-            throw new DataException(Messages.FILE_NOT_EXISTS);
         }
 
         return file;
@@ -85,7 +78,7 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
     @Override
     public TemporaryFile addEntity(TemporaryFile temporaryFile) throws DataException {
 
-        if (temporaryFile.getId() != null){
+        if (temporaryFile.getId() != null) {
             throw new DataException(Messages.FILE_ALREADY_EXISTS);
         }
 

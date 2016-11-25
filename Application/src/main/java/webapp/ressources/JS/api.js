@@ -31,6 +31,10 @@ function deconnexion(){
     Cookies.remove('mail');
     Cookies.remove('username');
     Cookies.remove('project');
+    Cookies.remove('creator');
+    Cookies.remove('branch');
+    Cookies.remove('revision');
+    Cookies.remove('path');
     window.location.href = "/";
 }
 
@@ -48,7 +52,7 @@ function ApiRequest(method,url,dataIn,callback) {
                 callback(data);
             },
             error: function(xhr, textStatus, errorThrown){
-                callback(null);
+                handleError(errorThrown,xhr.responseJSON.message);
             }
         });
     }else if(method === "POST"){
@@ -59,16 +63,24 @@ function ApiRequest(method,url,dataIn,callback) {
             async: false,
             timeout: 5000,
             success: function(data, textStatus ){
-                //alert('request successful');
                 callback(data);
             },
             error: function(xhr, textStatus, errorThrown){
-                callback(null);
+                handleError(errorThrown,xhr.responseJSON.message);
             }
         });
     }
 }
 
+function handleError(title,message){
+    BootstrapDialog.show({
+        title: title,
+        message: message,
+        type: BootstrapDialog.TYPE_DANGER,
+        closable: true,
+        draggable: true
+    });
+}
 
 $(document).ready(function() {
     $("#deconnexion").on("click", function (e) {

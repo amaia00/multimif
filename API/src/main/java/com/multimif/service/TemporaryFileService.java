@@ -13,19 +13,16 @@ import java.util.List;
  * @version 1.0
  * @since 1.0 11/18/16.
  */
-
 public interface TemporaryFileService {
 
     /**
+     * Retourne l'entité du fichier temporel selon le hashkey spécifiés
      *
-     * Retourne l'entité du fichier temporel selon l'id et le hashkey spécifiés
-     *
-     * @param idUser l'id de l'utilisateur
      * @param hashKey le hashKey du fichier
      * @return le fichier temporel qui corresponde avec l'id et le hashkey.
      * @throws DataException retourne une exception si le fichier n'existe pas
      */
-    TemporaryFile getEntityByHashAndUser(Long idUser, String hashKey) throws DataException;
+    TemporaryFile getEntityByHash(String hashKey) throws DataException;
 
     /**
      *
@@ -64,7 +61,6 @@ public interface TemporaryFileService {
      * dans la base de données
      *
      * @param idUser l'id de l'utilisateur
-     * @param hashKey le hashkey du fichier
      * @param content le contenu du fichier
      * @param path l'address du fichier
      * @param idProject l'id du projet
@@ -72,8 +68,22 @@ public interface TemporaryFileService {
      * @throws DataException si l'utilisateur ou le projet n'existe pas dans la base de
      * données.
      */
-    TemporaryFile addEntity(Long idUser, String hashKey, String content, String path,
+    TemporaryFile addEntity(Long idUser, String content, String path,
                             Long idProject) throws DataException;
+
+    /**
+     * Mise à jour d'un temporary file
+     *
+     * @param idUser l'id de l'utilisateur
+     * @param content le contenu du fichier
+     * @param path l'address du fichier
+     * @param idProject l'id du projet
+     * @return l'entité du fichier temporel
+     * @throws DataException si l'utilisateur ou le projet n'existe pas dans la base de
+     * données.
+     */
+    TemporaryFile updateEntity(Long idUser, String content, String path,
+                               Long idProject) throws DataException;
 
     /**
      *
@@ -85,4 +95,11 @@ public interface TemporaryFileService {
      * base de données
      */
     boolean deleteEntity(Long idFileTemporary) throws DataException;
+
+    /**
+     * Permet de supprimer une liste de TemporaryFile
+     * @param list Liste des objets à supprimer
+     * @throws Exception
+     */
+    boolean deleteAllEntity(List<TemporaryFile> list) throws DataException;
 }

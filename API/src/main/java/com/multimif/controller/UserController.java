@@ -102,18 +102,23 @@ public class UserController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<User> getByMail(@RequestParam(value = "username") String username,
-                                          @RequestParam(value = "password") String password) {
+    public ResponseEntity<String> login (@RequestParam(value = "username") String username,
+                                       @RequestParam(value = "password") String password) {
 
         User user;
 
         try {
             user = userService.authEntity(username, password);
+        } catch (DataException ex){
+            LOGGER.log(Level.FINE, ex.toString(), ex);
+            return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,ex.getMessage())),
+                                            HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             LOGGER.log(Level.FINE, ex.toString(), ex);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
+                    Constantes.OPERATION_MSG_RATE)),HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(JsonUtil.convertToJson(user), HttpStatus.OK);
     }
 
 
@@ -175,6 +180,7 @@ public class UserController {
 
     /**
      *
+     * TODO cacher les passwords
      * Cette méthode retourne tous les utilisateurs
      *
      * @return Liste d'utilisateurs
@@ -187,9 +193,6 @@ public class UserController {
 
         try {
             users = userService.getEntityList();
-        } catch (DataException ex) {
-            LOGGER.log(Level.FINE, ex.toString(), ex);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             LOGGER.log(Level.FINE, ex.toString(), ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
