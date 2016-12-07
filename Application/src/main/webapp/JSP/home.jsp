@@ -17,6 +17,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.js"></script>
         <script src="https://mbraak.github.io/jqTree/tree.jquery.js"></script>
         <link rel="stylesheet" href="https://mbraak.github.io/jqTree/jqtree.css" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css" type="text/css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
 
@@ -66,64 +67,82 @@
             </nav>
         </header>
 
-        <main class="container">
-            <div class="col-lg-5 col-md-12" id="homeGauche">
+        <main class="">
+            <div class="col-lg-4 col-md-12" id="homeGauche">
                 <section class="col-lg-12" id="divProjets">
-                    <header class="titreSection">
-                        <h2 class="h2DivProjet"> Mes Projets </h2>
-                        <button data-toggle="modal" data-target="#creerProjet" class="btn btn-success" id="ajouterProjet"> Créer un Projet</button>
-                        <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-success" id="clonerProjet"> Cloner un Projet Github</button>
+                    <header class="page-header">
+                        <h2 class="h2DivProjet"><i class="fa fa-user" aria-hidden="true"></i> Mes Projets
+                        <button data-toggle="modal" data-target="#creerProjet" class="btn btn-primary btn-sm" id="ajouterProjet">Projet <i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-primary btn-sm" id="clonerProjet">Projet Github <i class="fa fa-github" aria-hidden="true"></i></button>
+                        </h2>
                     </header>
                     <div class="col-lg-12" id="listeProjets">
-                        <!-- <div class="btn-group col-lg-12 ligneListeProjet">
+                        <div class="btn-group col-lg-12 ligneListeProjet">
                             <button type="button" class="btn btn-default nomListeProjets">Projet 1</button>
                             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-remove spanSupprimerProjet"></span></button>
-                        </div> -->
+                        </div>
                     </div>
                 </section>
                 <section class="col-lg-12" id="divCollaboration">
-                    <header class="titreSection">
-                        <h2 id="h2DivCollaboration"> Mes Collaborations </h2>
+                    <header class="page-header">
+                        <h2 id="h2DivCollaboration"><i class="fa fa-users" aria-hidden="true"></i> Mes Collaborations </h2>
                     </header>
                     <div class="btn-group col-lg-12" id="listeCollaborations">
-                        <!-- <div class="btn-group col-lg-12 ligneListeCollaborations">
+                        <div class="btn-group col-lg-12 ligneListeCollaborations">
                             <button type="button" class="btn btn-default nomListeCollaborations">Collaboration 1</button>
                             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-remove spanSupprimerProjet"></span></button>
-                        </div> -->
+                        </div>
                     </div>
                 </section>
             </div>
-            <section class="col-lg-7 col-md-12 hide" id="homeDroite">
-                <header class="col-lg-12 titreSection">
-                    <h2 id="projectName"> Nom du Projet </h2>
-                    <div class="col-lg-12">
-                        <button data-toggle="modal" data-target="#ajoutCollaborateur" class="btn btn-success" id="btnAjouterCollaborateur"> Ajouter un Collaborateur</button>
-                    </div>
-                    <div class="col-lg-12">
-                        <p>Date de création: <span id="project-creation-date"></span></p>
-                        <p>Dernière modification: <span id="project-last-modfif"></span></p>
-                        <p>Type: <span id="project-type"></span></p>
-                    </div>
-
+            <!-- <section class="col-lg-7 col-md-12 hide" id="homeDroite"> -->
+            <section class="col-lg-8 col-md-12" id="homeDroite">
+                <header class="col-lg-12 page-header">
+                    <h2 id="projectName" class="h2DivProjet"> Nom du Projet</h2>
+                    <button data-toggle="modal" data-target="#ajoutCollaborateur" class="btn btn-primary btn-sm" id="btnAjouterCollaborateur">Collaborateur <i class="fa fa-user-plus" aria-hidden="true"></i></button>
                 </header>
-                <div class="col-lg-8" id="divDiff">
+                <div class="col-lg-12 col-md-12 info-project">
+                    <ul class="list-inline">
+                        <li><span class="label label-default">Date de création</span><span class="label label-success" id="project-creation-date">12/12/4512</span></li>
+                        <li><span class="label label-default">Dernière modification</span><span class="label label-success" id="project-last-modfif">12/12/4512</span></li>
+                        <li><span class="label label-default">Type</span><span class="label label-success" id="project-type">12/12/4512</span></li>
+                    </ul>
                 </div>
-                <div class="col-lg-8" id="divCommit">
+
+                <div class="col-lg-12" id="divDiff"></div>
+
+                <div class="col-lg-9" id="divCommit">
                     <div class="col-lg-12" id="divSelectCommit">
-                        <select class="form-group form-control" id="selectBranch">
-                            <option></option>
-                        </select>
-                        <button type="button" class="btn btn-info" id="getArchive">archive de la branche</button>
+                        <form class="form-inline ">
+                        <div class="form-group col-lg-12">
+                            <label for="selectBranch"><i class="fa fa-code-fork" aria-hidden="true"></i> Branche: </label>
+                            <select class="form-group form-control input-large" id="selectBranch">
+                                <option></option>
+                            </select>
+                            <button type="button" class="btn btn-info" id="getArchive">Archive <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+                        </div>
+                        </form>
+
                     </div>
                     <div class="col-lg-12" id="divAfficherCommit">
                         <ul class="list-group" id="listCommit">
-                            <li class="list-group-item ligneCommit">Commit 1</li>
+                            <!-- <li class="list-group-item ligneCommit" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">
+                                <h5><strong>Révision:</strong> <span class="label label-default">02679c341374fca83a6331a11e43390da09ac39f</span> -
+                                    <span class="label label-info">Commit le 02/09/1995</span>
+                                </h5>
+                                <p><strong> Message:</strong> bonjour</p>
+
+
+                                <!-- <span> Utilisateur: Alexis</span>
+                                <span> Email: Alexis@Granola</span> -->
+                                <!-- <button type="button" id="diffButton" class="btn btn-primary btn-sm" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">DIFF</button>
+                            </li>-->
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-4" id="divListeDeveloppeur">
+                <div class="col-lg-3" id="divListeDeveloppeur">
                     <header>
-                        <h4> Ils sont sur le Projet</h4>
+                        <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Dev du projets </h4>
                     </header>
                     <div>
                         <ul class="list-group" id="listDev">
@@ -148,18 +167,22 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Parametre du projet </h4>
+                        <h4 class="modal-title"><i class="fa fa-cog" aria-hidden="true"></i> Créer un projet </h4>
                     </div>
                     <div class="modal-body">
                         <form id="formProjet">
-                            <label class="labelProjet"> Nom du projet </label>
-                            <input type="text" placeholder="Nom du projet" name="name" id="nomProjet" required />
-                            <label class="labelProjet"> Langage </label>
-                            <select name="type" class="form-group form-control" id="selectProjet">
-                                <option value="MAVEN"> MAVEN </option>
-                                <option value="CMAKE"> CMAKE </option>
-                            </select>
-                            <input  class="btn btn-success" id="btnProjet" type="submit" value="Créer" />
+                            <div class="form-group">
+                                <label class="control-label" for="nomProjet"> Nom du projet </label>
+                                <input type="text" class="form-control" placeholder="Nom du projet" name="name" id="nomProjet" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="selectProjet"> Langage </label>
+                                <select name="type" class="form-group form-control" id="selectProjet">
+                                    <option value="MAVEN"> MAVEN </option>
+                                    <option value="CMAKE"> CMAKE </option>
+                                </select>
+                            </div>
+                            <input  class="btn btn-primary" id="btnProjet" type="submit" value="Créer" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -177,18 +200,23 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Parametre du projet GIT </h4>
+                        <h4 class="modal-title"><i class="fa fa-github" aria-hidden="true"></i> Cloner un projet GIT</h4>
                     </div>
                     <div class="modal-body">
                         <form id="formCloneProjet">
-                            <label class="labelProjet"> url du projet GIT </label>
-                            <input type="text" placeholder="url du projet" name="name" id="urlCloneProjet" required />
-                            <label class="labelProjet"> Langage </label>
-                            <select name="type" class="form-group form-control" id="selectCloneProjet">
-                                <option value="MAVEN">MAVEN</option>
-                                <option value="CMAKE">CMAKE</option>
-                            </select>
-                            <input  class="btn btn-success" id="btnCloneProjet" type="submit" value="Cloner" />
+                            <div class="form-group">
+                                <label for="urlCloneProjet" class="control-label">URL du projet GIT</label>
+                                <input type="text" class="form-control" placeholder="https://github.com/hadjiszs/OnlineGitIDE.git" name="name" id="urlCloneProjet" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="selectCloneProjet" class="control-label"> Langage </label>
+                                <select name="type" class="form-control" id="selectCloneProjet">
+                                    <option value="MAVEN">MAVEN</option>
+                                    <option value="CMAKE">CMAKE</option>
+                                </select>
+                            </div>
+
+                            <input  class="btn btn-primary" id="btnCloneProjet" type="submit" value="Cloner" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -209,12 +237,18 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Ajouter un Collaborateur </h4>
+                        <h4 class="modal-title"><i class="fa fa-user-plus" aria-hidden="true"></i> Ajouter un Collaborateur au projet </h4>
                     </div>
                     <div class="modal-body">
-                        <formid="formAjoutCollaborateur">
-                            <select id="select-collaborateur"></select>
-                            <input  class="btn btn-success" id="btnAjoutCollaborateur" type="submit" value="Ajouter" />
+                        <form id="formAjoutCollaborateur">
+                            <div class="form-group">
+                                <label for="select-collaborateur">Collaborateur: </label>
+                                <select id="select-collaborateur" class="form-control">
+                                    <option></option>
+                                </select>
+
+                            </div>
+                            <input  class="btn btn-primary" id="btnAjoutCollaborateur" type="submit" value="Ajouter" />
                         </form>
                     </div>
                     <div class="modal-footer">

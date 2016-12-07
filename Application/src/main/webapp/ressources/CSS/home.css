@@ -80,3 +80,32 @@ BODY{
     margin-bottom:10px;
 }
 
+
+.container{
+    margin-left: 0;
+}
+
+#homeGauche{
+    border-right: 1px solid #eee;
+}
+
+.info-project{
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+#divListeDeveloppeur{
+    border-left: 1px solid #eee;
+}
+
+#divSelectCommit{
+    margin-bottom: 20px;
+}
+
+#selectBranch{
+    width: 60%;
+}
+
+#diffButton{
+    cursor:pointer;
+}
