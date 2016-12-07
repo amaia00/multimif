@@ -72,8 +72,12 @@
                 <section class="col-lg-12" id="divProjets">
                     <header class="page-header">
                         <h2 class="h2DivProjet"><i class="fa fa-user" aria-hidden="true"></i> Mes Projets
-                        <button data-toggle="modal" data-target="#creerProjet" class="btn btn-primary btn-sm" id="ajouterProjet">Projet <i class="fa fa-plus-square" aria-hidden="true"></i></button>
-                        <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-primary btn-sm" id="clonerProjet">Projet Github <i class="fa fa-github" aria-hidden="true"></i></button>
+                            <span data-placement="top" data-toggle="tooltip" title="Créer un nouveau projet">
+                                 <button data-toggle="modal" data-target="#creerProjet" class="btn btn-primary" id="ajouterProjet"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+                            </span>
+                            <span data-placement="top" data-toggle="tooltip" title="Cloner un projet GIT">
+                                <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-primary" id="clonerProjet"><i class="fa fa-github" aria-hidden="true"></i></button>
+                            </span>
                         </h2>
                     </header>
                     <div class="col-lg-12" id="listeProjets">

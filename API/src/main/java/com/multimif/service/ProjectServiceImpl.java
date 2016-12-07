@@ -51,6 +51,9 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (DataException e) {
             LOGGER.log(Level.FINE, e.toString(), e);
             throw new DataException(e.getMessage());
+        }finally {
+            ok = projectDAO.addEntity(project);
+            userGrantService.addEntity(idUser, project.getIdProject(), UserGrant.PermissionType.ADMIN);
         }
 
         /* Creation physique du depot */
