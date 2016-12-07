@@ -167,18 +167,22 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Parametre du projet </h4>
+                        <h4 class="modal-title"><i class="fa fa-cog" aria-hidden="true"></i> Créer un projet </h4>
                     </div>
                     <div class="modal-body">
                         <form id="formProjet">
-                            <label class="labelProjet"> Nom du projet </label>
-                            <input type="text" placeholder="Nom du projet" name="name" id="nomProjet" required />
-                            <label class="labelProjet"> Langage </label>
-                            <select name="type" class="form-group form-control" id="selectProjet">
-                                <option value="MAVEN"> MAVEN </option>
-                                <option value="CMAKE"> CMAKE </option>
-                            </select>
-                            <input  class="btn btn-success" id="btnProjet" type="submit" value="Créer" />
+                            <div class="form-group">
+                                <label class="control-label" for="nomProjet"> Nom du projet </label>
+                                <input type="text" class="form-control" placeholder="Nom du projet" name="name" id="nomProjet" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="selectProjet"> Langage </label>
+                                <select name="type" class="form-group form-control" id="selectProjet">
+                                    <option value="MAVEN"> MAVEN </option>
+                                    <option value="CMAKE"> CMAKE </option>
+                                </select>
+                            </div>
+                            <input  class="btn btn-primary" id="btnProjet" type="submit" value="Créer" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -196,18 +200,23 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Parametre du projet GIT </h4>
+                        <h4 class="modal-title"><i class="fa fa-github" aria-hidden="true"></i> Cloner un projet GIT</h4>
                     </div>
                     <div class="modal-body">
                         <form id="formCloneProjet">
-                            <label class="labelProjet"> url du projet GIT </label>
-                            <input type="text" placeholder="url du projet" name="name" id="urlCloneProjet" required />
-                            <label class="labelProjet"> Langage </label>
-                            <select name="type" class="form-group form-control" id="selectCloneProjet">
-                                <option value="MAVEN">MAVEN</option>
-                                <option value="CMAKE">CMAKE</option>
-                            </select>
-                            <input  class="btn btn-success" id="btnCloneProjet" type="submit" value="Cloner" />
+                            <div class="form-group">
+                                <label for="urlCloneProjet" class="control-label">URL du projet GIT</label>
+                                <input type="text" class="form-control" placeholder="https://github.com/hadjiszs/OnlineGitIDE.git" name="name" id="urlCloneProjet" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="selectCloneProjet" class="control-label"> Langage </label>
+                                <select name="type" class="form-control" id="selectCloneProjet">
+                                    <option value="MAVEN">MAVEN</option>
+                                    <option value="CMAKE">CMAKE</option>
+                                </select>
+                            </div>
+
+                            <input  class="btn btn-primary" id="btnCloneProjet" type="submit" value="Cloner" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -228,12 +237,18 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Ajouter un Collaborateur </h4>
+                        <h4 class="modal-title"><i class="fa fa-user-plus" aria-hidden="true"></i> Ajouter un Collaborateur au projet </h4>
                     </div>
                     <div class="modal-body">
-                        <formid="formAjoutCollaborateur">
-                            <select id="select-collaborateur"></select>
-                            <input  class="btn btn-success" id="btnAjoutCollaborateur" type="submit" value="Ajouter" />
+                        <form id="formAjoutCollaborateur">
+                            <div class="form-group">
+                                <label for="select-collaborateur">Collaborateur: </label>
+                                <select id="select-collaborateur" class="form-control">
+                                    <option></option>
+                                </select>
+
+                            </div>
+                            <input  class="btn btn-primary" id="btnAjoutCollaborateur" type="submit" value="Ajouter" />
                         </form>
                     </div>
                     <div class="modal-footer">

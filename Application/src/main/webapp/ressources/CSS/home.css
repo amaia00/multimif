@@ -105,3 +105,7 @@ BODY{
 #selectBranch{
     width: 60%;
 }
+
+#diffButton{
+    cursor:pointer;
+}
