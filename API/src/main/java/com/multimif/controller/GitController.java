@@ -408,7 +408,7 @@ public class GitController {
             System.out.println(newname);
             Project project = projectService.addEntity(newname, newType, Long.parseLong(idUser));
             System.out.println(project.getName());
-            userGrantService.addEntity(Long.parseLong(idUser), project.getIdProject(), UserGrant.PermissionType.ADMIN);
+            //userGrantService.addEntity(Long.parseLong(idUser), project.getIdProject(), UserGrant.PermissionType.ADMIN);
             System.out.println("permission");
             String author = getUsernameById(idUser);
             System.out.println(author);
@@ -418,7 +418,8 @@ public class GitController {
                 return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
+                    Constantes.OPERATION_MSG_RATE)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<String>(ret.toString(), HttpStatus.OK);

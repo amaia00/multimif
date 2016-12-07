@@ -33,7 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project addEntity(String name, Project.TypeProject type, Long idUser) throws Exception {
-        boolean ok;
+        boolean ok = true;
 
         Project project = new Project(name, type, idUser);
 
@@ -41,10 +41,11 @@ public class ProjectServiceImpl implements ProjectService {
             if (!userGrantService.existsProjectName(idUser, project.getName())) {
                 /* Creation dans la BD */
                 ok = projectDAO.addEntity(project);
-
+                System.out.println("nons");
                 /* On cree le rapport du projet avec l'admin */
                 userGrantService.addEntity(idUser, project.getIdProject(), UserGrant.PermissionType.ADMIN);
             } else {
+                System.out.println("existe deja");
                 throw new DataException(Messages.PROJECT_NAME_ALREADY_EXISTS);
             }
         } catch (DataException e) {
@@ -54,6 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         /* Creation physique du depot */
         if (ok) {
+            System.out.println("salut");
             User admin = userGrantService.getAdminByEntity(project.getIdProject());
             JsonObject content = Util.createRepository(admin.getUsername(), project.getName());
 
