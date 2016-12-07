@@ -168,7 +168,6 @@ public class UserGrantDAOTest extends TestUtil{
         assertEquals(adm.getIdUser(), admin.getIdUser());
         assertEquals(adm.getUsername(), admin.getUsername());
         assertEquals(adm.getMail(), admin.getMail());
-        assertNotEquals(adm.getPassword(), admin.getPassword());
 
     }
 

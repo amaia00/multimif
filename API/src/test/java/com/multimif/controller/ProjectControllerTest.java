@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -49,22 +50,26 @@ public class ProjectControllerTest extends TestUtil{
     public void addTest(){
         Exception exception = null;
         ResponseEntity<String> responseEntity = null;
-        ResponseEntity<User> userResponseEntity = null;
-        StatusOK statusOK = null;
+        ResponseEntity<String> userResponseEntity;
         projectController.init();
         userController.init();
+        StatusOK statusOK = null;
 
         try {
             newUser();
-            /*userResponseEntity = userController.add(user.getUsername(), user.getMail(), user.getPassword());
-            user.setIdUser(userResponseEntity.getBody().getIdUser());
+            userResponseEntity = userController.add(user.getUsername(), user.getMail(), user.getPassword());
+
+            JsonUtil<User> jsonUser = new JsonUtil<>();
+            User tmp = jsonUser.convertToObjectJSON(userResponseEntity.getBody(), User.class);
+
+            user.setIdUser(tmp.getIdUser());
 
             newProject();
             responseEntity = projectController.add(project.getName(), project.getType(), user.getIdUser());
 
             JsonUtil<StatusOK> jsonUtil = new JsonUtil<>();
             statusOK = jsonUtil.convertToObjectJSON(responseEntity.getBody(), StatusOK.class);
-            project.setIdProject(statusOK.getId());*/
+            project.setIdProject(statusOK.getId());
         }catch (Exception e){
             exception = e;
         }
