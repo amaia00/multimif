@@ -31,6 +31,7 @@ public class Compile {
     User creator;
     User currentUser;
     Project currentProject;
+    String branch;
 
     JsonObject jsonObject;
 
@@ -46,6 +47,8 @@ public class Compile {
         this.currentProject = projectService.getEntityById(idProject);
         // On récupère CurrentUser
         this.currentUser = userService.getEntityById(idCurrentUser);
+
+        this.branch = branch;
     }
 
     public JsonObject execute() throws InterruptedException, IOException, DataException {
@@ -82,7 +85,10 @@ public class Compile {
 
                 break;
             case CLONE_ACTION:
-                execLine += SCRIPT_CLONE + " " + CLONE_PATH + " " + REPO_PATH + " " + creator.getUsername() + " " + currentProject.getName() + ".git" + " " + currentUser.getUsername();
+                execLine += SCRIPT_CLONE + " " + CLONE_PATH + " " + REPO_PATH + " "
+                        + creator.getUsername() + " " + currentProject.getName() + ".git"
+                        + " " + currentUser.getUsername()
+                        + " " + this.branch;
                 break;
             case CLEAN_ACTION:
                 execLine += SCRIPT_CLEAN + " " + CLONE_PATH + " " + RESULTS_PATH + " " + currentUser.getUsername();
