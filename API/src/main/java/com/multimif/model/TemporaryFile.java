@@ -88,7 +88,7 @@ public class TemporaryFile implements Serializable {
             this.extension = path.substring(path.lastIndexOf(".")+1);
             if(path.lastIndexOf("/") == -1){
                 // pas de path
-                this.name = path.substring(0, path.lastIndexOf(".")-1);
+                this.name = path;
             }else{
                 this.name = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf(".")-1);
             }
