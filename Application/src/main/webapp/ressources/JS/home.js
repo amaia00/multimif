@@ -342,7 +342,7 @@ function getDateGit(timestamp){
 /** Ren voi la date d'un timsestamp */
 function getDate(timestamp){
     var d = new Date(timestamp),	// Convert the passed timestamp to milliseconds
-        yyyy = d.getYear(),
+        yyyy = d.getFullYear(),
         mm = d.getMonth() +1,	// Months are zero based. Add leading 0.
         dd = d.getDate(),			// Add leading 0.
         hh = d.getHours(),
