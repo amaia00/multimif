@@ -67,12 +67,12 @@
         </header>
 
         <main class="container">
-            <div class="col-lg-5 col-md-12" id="homeGauche">
+            <div class="col-lg-6 col-md-12" id="homeGauche">
                 <section class="col-lg-12" id="divProjets">
                     <header class="titreSection">
                         <h2 class="h2DivProjet"> Mes Projets </h2>
-                        <button data-toggle="modal" data-target="#creerProjet" class="btn btn-success" id="ajouterProjet"> Créer un Projet</button>
-                        <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-success" id="clonerProjet"> Cloner un Projet Github</button>
+                        <button data-toggle="modal" data-target="#creerProjet" class="btn btn-outline-primary btn-sm" id="ajouterProjet"> Créer un Projet</button>
+                        <button data-toggle="modal" data-target="#clonerModalProjet" class="btn btn-outline-primary btn-sm" id="clonerProjet"> Cloner un Projet Github</button>
                     </header>
                     <div class="col-lg-12" id="listeProjets">
                         <!-- <div class="btn-group col-lg-12 ligneListeProjet">
