@@ -37,6 +37,8 @@ $(document).ready(function() {
     refreshPage();
 
 
+    $('[data-toggle="tooltip"]').tooltip();
+
     ////////// PROJET /////////////
 
     // Créer un nouveau projet
