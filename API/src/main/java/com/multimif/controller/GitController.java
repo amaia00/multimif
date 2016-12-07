@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.json.JsonObject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +52,7 @@ public class GitController {
     /**
      * Service de gestion des autorisations
      */
-    UserGrantService userGrantService = new UserGrantServiceImpl();
+    private UserGrantService userGrantService = new UserGrantServiceImpl();
 
     /**
      * Methode interne pour recuperer le pseudo d'un user à partir de son id
@@ -98,10 +97,13 @@ public class GitController {
                                           @PathVariable String currentUser,
                                           @RequestParam(value = "path") String path) {
         JsonObject ret;
+        TemporaryFile file;
 
         try {
             String raw = idUser + idRepository + path;
-            temporaryFileService.getEntityByHash(String.valueOf(raw.hashCode()));
+            file = temporaryFileService.getEntityByHash(String.valueOf(raw.hashCode()));
+
+            return new ResponseEntity<>(JsonUtil.convertToJson(file),HttpStatus.OK);
         } catch (DataException ex) {
 
             try {
@@ -121,7 +123,6 @@ public class GitController {
             }
             return new ResponseEntity<>(ret.toString(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
     }
 
     /**
@@ -287,6 +288,7 @@ public class GitController {
 
             User commiter = userService.getEntityById(Long.parseLong(currentUser));
             files = temporaryFileService.getEntityByUserProject(Long.parseLong(currentUser), Long.parseLong(idRepository));
+            System.out.println("giles: " + files);
             ret = Util.makeCommit(author, repository, branch, commiter, files, message);
             if (ret == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -379,12 +381,11 @@ public class GitController {
      */
     //ATENTION : pour cette requête : idUser = L'utilisateur en cours. En effet, on créé un nouveau dépot. C'est le current user qui est donc creator
     //La variable idRepository est inutile
-    @RequestMapping(value = "/clone/{url}/{newname}/{type}", method = RequestMethod.POST, produces = GitConstantes.APPLICATION_JSON_UTF8)
+    @RequestMapping(value = "/clone/{type}", method = RequestMethod.POST, produces = GitConstantes.APPLICATION_JSON_UTF8)
     @ResponseBody
     public ResponseEntity<String> postClone(@PathVariable String idUser,
+                                            @RequestParam(value="url") String url,
                                      @PathVariable String idRepository,
-                                     @PathVariable String url,
-                                     @PathVariable String newname,
                                      @PathVariable String type) {
         JsonObject ret = null;
         Project.TypeProject newType;
@@ -392,11 +393,8 @@ public class GitController {
             case "JAVA":
                 newType = Project.TypeProject.JAVA;
                 break;
-            case "C":
-                newType = Project.TypeProject.C;
-                break;
-            case "CPP":
-                newType = Project.TypeProject.CPP;
+            case "CMAKE":
+                newType = Project.TypeProject.CMAKE;
                 break;
             case "MAVEN":
                 newType = Project.TypeProject.MAVEN;
@@ -405,18 +403,23 @@ public class GitController {
                 newType = Project.TypeProject.JAVA;
         }
 
-
         try {
+            String newname = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."));
+            System.out.println(newname);
             Project project = projectService.addEntity(newname, newType, Long.parseLong(idUser));
-            userGrantService.addEntity(Long.parseLong(idUser), project.getIdProject(), UserGrant.PermissionType.ADMIN);
+            System.out.println(project.getName());
+            //userGrantService.addEntity(Long.parseLong(idUser), project.getIdProject(), UserGrant.PermissionType.ADMIN);
+            System.out.println("permission");
             String author = getUsernameById(idUser);
-            String repository = getNameRepositoryById(idRepository);
-            ret = Util.cloneRemoteRepo(author, repository, url);
+            System.out.println(author);
+            //String repository = getNameRepositoryById(idRepository);
+            ret = Util.cloneRemoteRepo(author, project.getName(), url);
             if (ret == null) {
                 return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
+                    Constantes.OPERATION_MSG_RATE)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<String>(ret.toString(), HttpStatus.OK);
@@ -534,11 +537,15 @@ public class GitController {
             newFile = temporaryFileService.addEntity(Long.valueOf(currentUser), "", path, idrepo);
             if(newFile == null)
                 return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
-                        Constantes.OPERATION_MSG_RATE)), HttpStatus.ACCEPTED);
+                        Constantes.OPERATION_MSG_RATE)), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (DataException e) {
             LOGGER.log(Level.FINE, e.getMessage(), e);
             return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
-                    Constantes.OPERATION_MSG_RATE)), HttpStatus.ACCEPTED);
+                    e.getMessage())), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_RATE,
+                    Constantes.OPERATION_MSG_RATE)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(JsonUtil.convertToJson(new Status(Constantes.OPERATION_CODE_REUSSI,

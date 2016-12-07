@@ -31,7 +31,7 @@ public class UserDAOImp extends DAO implements UserDAO {
         try {
             usr = getEntityByMail(user.getMail());
         } catch (DataException ex) {
-            LOGGER.log(Level.OFF, ex.toString(), ex);
+            LOGGER.log(Level.FINE, ex.toString(), ex);
             usr = null;
         }
 
@@ -43,8 +43,6 @@ public class UserDAOImp extends DAO implements UserDAO {
             getEntityManager().getTransaction().commit();
 
             closeEntityManager();
-
-            hiddePassword(user);
 
         } else {
             throw new DataException(Messages.USER_ALREADY_EXISTS);
@@ -105,7 +103,7 @@ public class UserDAOImp extends DAO implements UserDAO {
         try{
             user = query.getSingleResult();
         }catch (NoResultException e){
-            LOGGER.log(Level.OFF, e.toString(), e);
+            LOGGER.log(Level.FINE, e.toString(), e);
         }finally {
             closeEntityManager();
         }
@@ -146,7 +144,7 @@ public class UserDAOImp extends DAO implements UserDAO {
     }
 
     @Override
-    public User authEntity(String username, String password) throws DataException {
+    public User authEntity(String username, String password, Boolean hash) throws DataException {
         User user;
 
         TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByUsername", User.class);
@@ -155,7 +153,7 @@ public class UserDAOImp extends DAO implements UserDAO {
         try{
             user = query.getSingleResult();
         }catch (NoResultException e){
-            LOGGER.log(Level.OFF, e.toString(), e);
+            LOGGER.log(Level.FINE, e.toString(), e);
             throw new DataException(Messages.USER_NOT_EXISTS);
         }finally {
             closeEntityManager();
@@ -164,10 +162,16 @@ public class UserDAOImp extends DAO implements UserDAO {
         if (user == null) {
             throw new DataException(Messages.USER_NOT_EXISTS);
         } else {
-            if (!user.getPassword().equals(hashGenerator(password))) {
-            throw new DataException(Messages.USER_AUTHENTICATION_FAILED);
-        }
-
+            // Si c'est un hash
+            if(hash){
+                if (!user.getPassword().equals(password)) {
+                    throw new DataException(Messages.USER_AUTHENTICATION_FAILED);
+                }
+            }else{
+                if (!user.getPassword().equals(hashGenerator(password))) {
+                    throw new DataException(Messages.USER_AUTHENTICATION_FAILED);
+                }
+            }
         return user;
     }
     }
@@ -194,13 +198,11 @@ public class UserDAOImp extends DAO implements UserDAO {
         BigInteger bigInt = new BigInteger(1, digest);
         String hashtext = bigInt.toString(16);
 
-        StringBuilder hash = new StringBuilder(bigInt.toString(16));
-
         /* Maintenant on doit mis à zero jusqu'à 32 characteres */
         while(hashtext.length() < 32 ) {
-            hash.insert(0, "0");
+            hashtext = "0" + hashtext;
         }
 
-        return hash.toString();
+        return hashtext;
     }
 }

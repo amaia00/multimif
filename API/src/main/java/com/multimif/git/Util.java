@@ -83,7 +83,7 @@ public class Util {
             if (usetemporaryFiles && list != null) {
                 for (TemporaryFile file : list) {
                     if (!arborescence.existElement("root/" + file.getPath())) {
-                        arborescence.addElement(file.getPath());
+                        arborescence.addElement(file.getPath()+ "#");
                     }
                 }
             }
@@ -158,15 +158,32 @@ public class Util {
 
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
         // prepare a new folder for the cloned repository
+
+
         String path = getGitRepo(creator, repository);
+        deleteDirectory(new File(path));
+
+        System.out.println("path: " + path);
+        //path = "/root/inf1096m-2016-grp01/repositories/test/Interpolation.git";
         File localPath = new File(path);
+
+        System.out.println("sqdsq");
+        System.out.println("url: " + remoteURL );
+        //remoteURL = "https://github.com/hadjiszs/Interpolation.git";
         // then clone
         try {
+            /*Git.cloneRepository().setDirectory(localPath)
+                    .setNoCheckout(true)
+                    .setRemote( remoteURL )
+                    .call();*/
+
+
             Git.cloneRepository().setURI(remoteURL)
                     .setDirectory(localPath)
                     .call();
         } catch (GitAPIException e) {
             LOGGER.log(Level.FINE, e.getMessage(), e);
+            System.out.println(e.getMessage());
             throw new DataException(Messages.GIT_CANT_CLONE_REPOSITORY);
         }
         return factory.createObjectBuilder().add("result", GitStatus.CLONE_SUCCESS.toString()).build();
@@ -339,8 +356,10 @@ public class Util {
             AbstractTreeIterator newTreeParser = prepareTreeParser(repository, parent);
 
             List<DiffEntry> diff = git.diff()
-                    .setOldTree(oldTreeParser)
-                    .setNewTree(newTreeParser)
+                    .setOldTree(newTreeParser)
+                    .setNewTree(oldTreeParser)
+                    /*.setOldTree(oldTreeParser)
+                    .setNewTree(newTreeParser)*/
                     .call();
 
             formatter.setRepository(repository);
@@ -617,29 +636,36 @@ public class Util {
                     .call();
 
             PrintStream output;
-        int i =0;
             for (TemporaryFile file : files) {
                 //File newFile = new File(file.getPath());
                 //newFile.createNewFile();
                 //System.out.println(file.getPath());
-                output = new PrintStream(new FileOutputStream(file.getPath()));
+                String path = getGitRepo(author, repository) +"/"+ file.getPath();
+                System.out.println("path: " + path);
+                file.mkdirs(path);
+                FileOutputStream fos = new FileOutputStream(path);
+                output = new PrintStream(fos);
                 output.print(file.getContent());
-                git.add()
-                        .addFilepattern(file.getPath())
-                        .call();
-                i++;
+                output.close();
+
             }
+            System.out.println("ici");
+            git.add()
+                    .addFilepattern(".")
+                    .call();
+            System.out.println("bonjour");
             RevCommit newCommit = git.commit()
                     .setAuthor(commiter.getUsername(), commiter.getMail())
                     .setMessage(message)
                     .call();
-            //System.out.println(CommitUtils.getHead(git.getRepository()).getFullMessage());
-            //System.out.println(getArborescence(author, repository, CommitUtils.getHead(git.getRepository()).getName()));
+            System.out.println(CommitUtils.getHead(git.getRepository()).getFullMessage());
+            System.out.println(getArborescence(author, repository, newCommit.getName(),null,false));
             builder.add("result", GitStatus.COMMIT_DONE.toString());
             builder.add("new_commit_id", newCommit.getName());
             return builder.build();
         } catch (Exception e) {
-            return builder.add("result", GitStatus.COMMIT_FAILED.toString()).build();
+            //return builder.add("result", GitStatus.COMMIT_FAILED.toString()).build();
+            return null;
         }
     }
 

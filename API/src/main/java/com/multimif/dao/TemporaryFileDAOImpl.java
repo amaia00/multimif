@@ -33,7 +33,8 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
         try {
             file = query.getSingleResult();
         } catch(NoResultException e) {
-            file = null;
+            LOGGER.log(Level.FINE, e.getMessage(), e);
+            throw new DataException(Messages.FILE_NOT_EXISTS);
         } finally {
             closeEntityManager();
         }
@@ -60,7 +61,7 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
     @Override
     public TemporaryFile getEntityById(Long idTemporaryFile) {
         TemporaryFile file;
-
+        System.out.println("ID:"+idTemporaryFile);
         file = getEntityManager().find(TemporaryFile.class, idTemporaryFile);
         closeEntityManager();
 
@@ -77,22 +78,35 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
 
     @Override
     public TemporaryFile addEntity(TemporaryFile temporaryFile) throws DataException {
-
+        TemporaryFile tmp;
         if (temporaryFile.getId() != null) {
             throw new DataException(Messages.FILE_ALREADY_EXISTS);
         }
 
-        getEntityManager().getTransaction().begin();
-        getEntityManager().persist(temporaryFile);
-        getEntityManager().getTransaction().commit();
+        try {
+            tmp = getEntityByHashKey(temporaryFile.getHashKey());
+        }catch (DataException e) {
+            LOGGER.log(Level.OFF, e.getMessage(), e);
+            tmp = null;
+        }
 
-        closeEntityManager();
+        if (tmp == null) {
+            getEntityManager().getTransaction().begin();
+            getEntityManager().persist(temporaryFile);
+            getEntityManager().getTransaction().commit();
+
+            closeEntityManager();
+        } else {
+            throw new DataException(Messages.FILE_ALREADY_EXISTS);
+        }
+
+
 
         return temporaryFile;
     }
 
     @Override
-    public boolean updateEntity(TemporaryFile temporaryFile) throws DataException {
+    public TemporaryFile updateEntity(TemporaryFile temporaryFile) throws DataException {
 
         getEntityById(temporaryFile.getId());
         if (temporaryFile.getId() == null){
@@ -104,7 +118,7 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
 
         closeEntityManager();
 
-        return true;
+        return temporaryFile;
     }
 
     @Override
@@ -119,6 +133,7 @@ public class TemporaryFileDAOImpl extends DAO implements TemporaryFileDAO {
         getEntityManager().remove(getEntityManager().contains(temporaryFile)
                 ? temporaryFile : getEntityManager().merge(temporaryFile));
         getEntityManager().getTransaction().commit();
+        closeEntityManager();
 
         return true;
     }

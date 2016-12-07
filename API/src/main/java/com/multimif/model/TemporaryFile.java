@@ -1,6 +1,7 @@
 package com.multimif.model;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.Serializable;
 
 import static com.multimif.util.SplitPath.getFileExtension;
@@ -67,8 +68,32 @@ public class TemporaryFile implements Serializable {
         this.user = user;
         this.project = project;
         this.path = path;
-        this.name = "";
-        this.extension = "";
+
+        System.out.println(path);
+        // On verifie si c'est un .DS_STORE
+        if(path.contains(".DS_STORE")){
+            this.name = ".DS_STORE";
+            this.extension = "";
+        }else if(path.lastIndexOf(".") == -1){ // pas d'extension
+            this.extension = "";
+            // On verifie si il y a un path avant le nom du fichier
+            if(path.lastIndexOf("/") == -1){
+                // pas de path
+                this.name = path;
+            }else{
+                this.name = path.substring(path.lastIndexOf("/")+1);
+            }
+        }else{ // On a un extension
+            // On verifie si il y a un path avant le nom du fichier
+            this.extension = path.substring(path.lastIndexOf(".")+1);
+            if(path.lastIndexOf("/") == -1){
+                // pas de path
+                this.name = path;
+            }else{
+                this.name = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf(".")-1);
+            }
+        }
+
     }
 
 
@@ -158,11 +183,21 @@ public class TemporaryFile implements Serializable {
         this.extension = extension;
     }
 
-    public ExtensionType getExtensionType() {
-        return ExtensionType.valueOf(getExtension());
-    }
-
     public void setExtensionType(ExtensionType extensionType) {
         setExtension(extensionType.getExtension().toUpperCase());
     }
+
+    public void mkdirs(String path){
+        path = path.substring(0,path.lastIndexOf("/"));
+        try{
+            File file = new File(path);
+            file.mkdirs();
+        }catch (Exception ex){
+            System.out.println("MKDIRS: " + ex.getMessage());
+        }
+
+
+    }
+
+
 }
