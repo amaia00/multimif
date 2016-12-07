@@ -56,20 +56,26 @@ public class PermissionControllerTest extends TestUtil{
         Exception exception = null;
         ResponseEntity<Status> responseEntity = null;
         ResponseEntity<String> projectResponseEntity = null;
-        ResponseEntity<User> userResponseEntity = null;
+        ResponseEntity<String> userResponseEntity = null;
         permissionController.init();
         userController.init();
         projectController.init();
 
         try{
             newAdmin();
-            /*userResponseEntity = userController.add(admin.getUsername(), admin.getMail(), admin.getPassword());
-            admin.setIdUser(userResponseEntity.getBody().getIdUser());
+            userResponseEntity = userController.add(admin.getUsername(), admin.getMail(), admin.getPassword());
+
+            JsonUtil<User> jsonUser = new JsonUtil<>();
+            User tmp = jsonUser.convertToObjectJSON(userResponseEntity.getBody(), User.class);
+            admin.setIdUser(tmp.getIdUser());
 
             newDeveloper();
             userResponseEntity = userController.add(developer.getUsername(), developer.getMail(),
                     developer.getPassword());
-            developer.setIdUser(userResponseEntity.getBody().getIdUser());
+
+            tmp = jsonUser.convertToObjectJSON(userResponseEntity.getBody(), User.class);
+
+            developer.setIdUser(tmp.getIdUser());
 
             /* Quand on cree le project implicitament il cree le rapport entre projet et admin */
             newProject();

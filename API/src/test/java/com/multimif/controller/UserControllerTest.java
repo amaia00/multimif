@@ -1,6 +1,7 @@
 package com.multimif.controller;
 
 import com.multimif.model.User;
+import com.multimif.util.JsonUtil;
 import com.multimif.util.Status;
 import com.multimif.util.TestUtil;
 import org.junit.FixMethodOrder;
@@ -47,13 +48,16 @@ public class UserControllerTest extends TestUtil {
     public void addTest(){
         userController.init();
         Exception exception = null;
-        ResponseEntity<User> responseEntity = null;
+        ResponseEntity<String> responseEntity = null;
         try{
             newUser();
-/*
+
             responseEntity = userController
                     .add(user.getUsername(), user.getMail(), user.getPassword());
-            user.setIdUser(responseEntity.getBody().getIdUser());*/
+            JsonUtil<User> jsonUser = new JsonUtil<>();
+            User tmp = jsonUser.convertToObjectJSON(responseEntity.getBody(), User.class);
+
+            user.setIdUser(tmp.getIdUser());
         }catch (Exception e){
             exception = e;
         }

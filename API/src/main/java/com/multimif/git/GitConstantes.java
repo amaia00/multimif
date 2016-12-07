@@ -20,4 +20,8 @@ public class GitConstantes {
 
     public static final String ZIP_EXTENSION = ".zip";
 
+    public GitConstantes(){
+        /* On chache le constructeur */
+    }
+
 }
