@@ -5,6 +5,7 @@ Application.iml
 .DS_Store
 Multimif.iml
 API.iml
+Application/Application.iml
 .idea
 .idea/*
 *.orig
