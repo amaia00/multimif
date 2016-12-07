@@ -96,7 +96,7 @@
                 </section>
             </div>
             <!-- <section class="col-lg-7 col-md-12 hide" id="homeDroite"> -->
-            <section class="col-lg-8 col-md-12" id="homeDroite">
+            <section class="col-lg-8 col-md-12 hide" id="homeDroite">
                 <header class="col-lg-12 page-header">
                     <h2 id="projectName" class="h2DivProjet"> Nom du Projet</h2>
                     <button data-toggle="modal" data-target="#ajoutCollaborateur" class="btn btn-primary btn-sm" id="btnAjouterCollaborateur">Collaborateur <i class="fa fa-user-plus" aria-hidden="true"></i></button>
@@ -146,7 +146,7 @@
                     </header>
                     <div>
                         <ul class="list-group" id="listDev">
-                            <li class="list-group-item">Nom 1</li>
+                            <!--<li class="list-group-item">Nom 1</li> -->
                         </ul>
                     </div>
                 </div>
