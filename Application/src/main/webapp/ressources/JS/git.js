@@ -20,12 +20,10 @@ function listCommit(idProject,idCreator, idUser,branch){
             $.each(json["commits"], function(index, element) {
                 $('#listCommit').append(
                     '<li class="list-group-item ligneCommit" creator="'+ idCreator + '" project="'+ idProject+'" revision="' + element.id + '" branch="' + branch + '"> \
-                        <span class="open-revision"> Révision: ' + element.id + '</span> \
-                        <span> Date: ' + element.date + '</span> \
-                        <span> Message: ' + element.message + '</span> \
-                        <span> Utilisateur: ' + element.user + '</span> \
-                        <span> Email: ' + element.email + '</span> \
-                        <button type="button" id="diffButton" class="btn btn-primary btn-sm" creator="'+ idCreator + '" project="'+ idProject+'" revision="' + element.id + '" branch="' + branch + '">DIFF</button>\
+                      <h5><strong>Révision:</strong> <span class="label label-default" id="diffButton" creator="'+ idCreator + '" project="'+ idProject+'" revision="' + element.id + '" branch="' + branch + '">element.id</span> - \
+                        <span class="label label-info">Commit le ' + getDate(element.date) + '02/09/1995</span> \
+                      </h5> \
+                        <p><strong> Message:</strong> ' + element.message + '</p> \
                       </li>');
             });
     });
