@@ -1,6 +1,8 @@
 $(document).ready(function() {
     refreshPage();
 
+    $('[data-toggle="tooltip"]').tooltip();
+
     // Si on selectionne une branche
     $("#selectBranch").on("change",function(e){
         e.preventDefault();
