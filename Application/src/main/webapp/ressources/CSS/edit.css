@@ -56,20 +56,22 @@ BODY{
 #editeurJava{
     margin-top:10px;
     margin-bottom:10px;
-    padding-right: 30px;
+    /*padding-right: 30px;*/
 }
 
-#divCompilation{
-    margin-bottom:20px;
+#contenuCompilation > script {
+    padding: 0px;
+    margin: 0px;
+}
+
+div.asciicast {
+    margin: 0px !important;
 }
 
 #contenuCompilation{
-    height:250px;
-    overflow-y : scroll;
-    background:#000;
+    margin-top:10px;
+    background:#FFFFFF;
     color:#449d44;
-    padding:15px;
-    font-size: large;
 }
 
 .ligneBtnCreer{
