@@ -144,15 +144,6 @@ $(document).ready(function() {
         listCommit(idProject,idCreator, idUser,branch);
     });
 
-    // SI on click sur un commit
-    $("#divAfficherCommit").on("click", ".open-revision", function(e){
-        e.preventDefault();
-        var idProject = $(this).parent().attr("project");
-        var branch = $(this).parent().attr("branch");
-        var revision = $(this).parent().attr("revision");
-        var idCreator = $(this).parent().attr("creator");
-        openCommit(idProject, idCreator, branch, revision);
-    });
 
     // SI on click le bouton diff d'un commit
     $("#divAfficherCommit").on("click", "#diffButton", function (e) {
@@ -288,15 +279,6 @@ function openProject(idProject, idCreator){
     });
 }
 
-/* Ouvre un commit afin de l'observer */
-function openCommit(idProject, idCreator, branch, revision) {
-    Cookies.set('project', idProject);
-    Cookies.set('creator', idCreator);
-    Cookies.set('branch', branch);
-    Cookies.set('revision', revision);
-    window.location.href = "/JSP/viewer.jsp";
-}
-
 /* Affiche les informations d'un projets */
 function infoProject(idProject){
     var url = "/api/project/" + idProject;
@@ -320,7 +302,7 @@ function addCollaborateur(idProject,idUser){
 }
 
 function removeCollaborateur(idProject, idUser){
-    var url = "/api/projects/"+ idProject + "/users/" + idUser;
+    var url = "/api/permissions/projects/"+ idProject + "/users/" + idUser;
     ApiRequest('DELETE',url,"",function(json){
         console.log("Remove collaborateur au projet: " + idProject + " idUser:  " + idUser + " : " + JSON.stringify(json));
         refreshPage();
@@ -346,6 +328,17 @@ function cloneProject(idUser,urlProject,type){
     });
 }
 
+/** Renvoi la date d'un timetstamp git */
+function getDateGit(timestamp){
+    var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
+        yyyy = d.getYear(),
+        mm = d.getMonth() +1,	// Months are zero based. Add leading 0.
+        dd = d.getDate(),			// Add leading 0.
+        hh = d.getHours(),
+        min = d.getMinutes();
+
+    return  dd + '-' + mm + '-' + yyyy + ', ' + hh + ':' + min;
+}
 /** Ren voi la date d'un timsestamp */
 function getDate(timestamp){
     var d = new Date(timestamp),	// Convert the passed timestamp to milliseconds

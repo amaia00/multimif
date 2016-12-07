@@ -21,7 +21,7 @@ function listCommit(idProject,idCreator, idUser,branch){
                 $('#listCommit').append(
                     '<li class="list-group-item ligneCommit" creator="'+ idCreator + '" project="'+ idProject+'" revision="' + element.id + '" branch="' + branch + '"> \
                       <h5><strong>Révision:</strong> <span class="label label-default" id="diffButton" creator="'+ idCreator + '" project="'+ idProject+'" revision="' + element.id + '" branch="' + branch + '"> ' + element.id + '</span> - \
-                        <span class="label label-info">Commit le ' + getDate(element.date) + '</span> \
+                        <span class="label label-info">Commit le ' + getDateGit(element.date) + '</span> \
                       </h5> \
                         <p><strong> Message:</strong> ' + element.message + '</p> \
                       </li>');
