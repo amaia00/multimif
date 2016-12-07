@@ -17,6 +17,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.js"></script>
         <script src="https://mbraak.github.io/jqTree/tree.jquery.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css" type="text/css">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
 
         <!-- Asciinema -->
@@ -66,8 +67,6 @@
                         <ul class="nav navbar-nav">
                             <li><a href="home.jsp">Home</a></li>
                             <li class="active"><a href="edit.jsp">Edition</a></li>
-                            <li><a href="viewer.jsp">Viewer</a></li>
-
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a id="deconnexion" href="#">Deconnexion</a></li>
@@ -115,24 +114,30 @@
                         <button type="button" class="btn btn-default" id="btnAutoIndent">Tout Indenter</button>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Création
+                                <i class="fa fa-plus" aria-hidden="true"></i>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="ligneBtnCreer" id="btnCreerBranche" data-toggle="modal" data-target="#fenetreBranche"><a>Créer une Branche</a></li>
-                                <li class="ligneBtnCreer" id="btnCreerFichier" data-toggle="modal" data-target="#fenetreFichier"><a>Créer un Fichier</a></li>
-                                <li class="ligneBtnCreer" id="btnCreerDossier" data-toggle="modal" data-target="#fenetreDossier"><a>Créer un Dossier</a></li>
+                                <li class="ligneBtnCreer" id="btnCreerFichier" data-toggle="modal" data-target="#fenetreFichier"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Fichier</a></li>
+                                <li class="ligneBtnCreer" id="btnCreerDossier" data-toggle="modal" data-target="#fenetreDossier"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Dossier</a></li>
+                                <li class="ligneBtnCreer" id="btnCreerBranche" data-toggle="modal" data-target="#fenetreBranche"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Branche</a></li>
                             </ul>
                         </div>
-                        <input  type="button" class="btn btn-default" id="btnCommit"  value="Commit" data-toggle="modal" data-target="#fenetreCommit"/>
-                        <button type="button" class="btn btn-default" id="btnSave">Sauver</button>
-                        <button type="button" class="btn btn-default" id="btnCompiler">Compiler</button>
+                        <span data-placement="top" data-toggle="tooltip" title="Commit les fichiers modifiés">
+                            <button type="button" class="btn btn-default" id="btnCommit" data-toggle="modal" data-target="#fenetreCommit" data-placement="top"><i class="fa fa-upload" aria-hidden="true"></i></button>
+                        </span>
+                        <span data-placement="top" data-toggle="tooltip" title="Sauvegarder le fichier en cours">
+                            <button type="button" class="btn btn-default" id="btnSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        </span>
+                        <span data-placement="top" data-toggle="tooltip" title="Compiler le projet sur la branche courante">
+                            <button type="button" class="btn btn-default" id="btnCompiler"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                        </span>
                     </div>
                 </div>
             </aside>
 
             <section class="row">
-                    <div class="col-lg-10 col-lg-offset-1" id="editeurJava">
+                    <div class="col-lg-6 col-lg-offset-1" id="editeurJava">
                         <textarea id="java-code">
 import com.demo.util.MyType;
 import com.demo.util.MyInterface;
@@ -157,15 +162,12 @@ return member;
 }
                         </textarea>
                     </div>
-            </section>
 
-            <!-- Sortie de compilation -->
-            <section class="row">
-                <div class="col-lg-10 col-lg-offset-1" id="divCompilation">
-                    <div id="contenuCompilation">
-                        <p> Sortie du compilateur</p>
+                    <!-- Sortie de compilation -->
+                    <div class="col-lg-4" id="contenuCompilation">
+                        <%--<p> Sortie du compilateur</p>--%>
+                        <script type="text/javascript" src="https://asciinema.org/a/btnyyqffqbvt2tzo4oo15mgc6.js" id="asciicast-btnyyqffqbvt2tzo4oo15mgc6" data-theme="solarized-dark" data-autoplay="true" async></script>
                     </div>
-                </div>
             </section>
             <!-- Fin compilation -->
             <!--

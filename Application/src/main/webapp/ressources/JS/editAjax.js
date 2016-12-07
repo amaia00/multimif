@@ -1,6 +1,8 @@
 $(document).ready(function() {
     refreshPage();
 
+    $('[data-toggle="tooltip"]').tooltip();
+
     // Si on selectionne une branche
     $("#selectBranch").on("change",function(e){
         e.preventDefault();
@@ -98,7 +100,7 @@ function edit(idProject,idUser,idCreator,branch,path,content,temporary){
     }else{
         var url = "/api/file/"+idUser+"/"+idCreator+"/" + idProject + "/"+branch+ "/edit?path="+path+ "&content=" + content;
     }
-
+    
     ApiRequest('POST',url,"",function(json){
         console.log("Edition: " + JSON.stringify(json));
         BootstrapDialog.show({
