@@ -126,7 +126,7 @@
                     </div>
                     <div class="col-lg-12" id="divAfficherCommit">
                         <ul class="list-group" id="listCommit">
-                            <li class="list-group-item ligneCommit" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">
+                            <!-- <li class="list-group-item ligneCommit" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">
                                 <h5><strong>Révision:</strong> <span class="label label-default">02679c341374fca83a6331a11e43390da09ac39f</span> -
                                     <span class="label label-info">Commit le 02/09/1995</span>
                                 </h5>
@@ -135,8 +135,8 @@
 
                                 <!-- <span> Utilisateur: Alexis</span>
                                 <span> Email: Alexis@Granola</span> -->
-                                <!-- <button type="button" id="diffButton" class="btn btn-primary btn-sm" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">DIFF</button> -->
-                            </li>
+                                <!-- <button type="button" id="diffButton" class="btn btn-primary btn-sm" creator="1" project="1" revision="02679c341374fca83a6331a11e43390da09ac39f" branch="master">DIFF</button>
+                            </li>-->
                         </ul>
                     </div>
                 </div>
