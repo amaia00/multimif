@@ -33,7 +33,7 @@ public class Constantes {
     public static final String MV_TEMP_FILES_ACTION = "getTempFile";
 
 
-    public static final String REPO_PATH = System.getProperty("user.dir") + "/API/repositories"; // depot des projets
+    public static final String REPO_PATH = System.getProperty("user.dir") + "/repositories"; // depot des projets
     public static final String CLONE_PATH = System.getProperty("user.dir") + "/API/clone"; // depot des projets pour la compilation
     public static final String SCRIPTS_PATH = System.getProperty("user.dir") + "/API/scripts"; // scripts
     public static final String RESULTS_PATH = System.getProperty("user.dir") + "/API/results"; // resultat de la compilation
