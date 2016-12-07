@@ -163,7 +163,7 @@ public class Compile {
             setContentFile(temporaryFile, temporaryFile.getContent());
 
             // 3) deplacer le fichier
-            //mvFilesToCloneRepo(fileName, fileExt, filePath);
+            mvFilesToCloneRepo(fileName, fileExt, filePath);
         }
     }
 
