@@ -38,9 +38,10 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = new Project(name, type, idUser);
 
         try {
+            /* Creation dans la BD */
+            ok = projectDAO.addEntity(project);
+
             if (!userGrantService.existsProjectName(idUser, project.getName())) {
-                /* Creation dans la BD */
-                ok = projectDAO.addEntity(project);
                 System.out.println("nons");
                 /* On cree le rapport du projet avec l'admin */
                 userGrantService.addEntity(idUser, project.getIdProject(), UserGrant.PermissionType.ADMIN);
@@ -51,9 +52,6 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (DataException e) {
             LOGGER.log(Level.FINE, e.toString(), e);
             throw new DataException(e.getMessage());
-        }finally {
-            ok = projectDAO.addEntity(project);
-            userGrantService.addEntity(idUser, project.getIdProject(), UserGrant.PermissionType.ADMIN);
         }
 
         /* Creation physique du depot */
