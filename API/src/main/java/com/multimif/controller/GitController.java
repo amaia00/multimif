@@ -59,6 +59,7 @@ public class GitController {
      *
      * @param idUser id de l'user
      * @return son pseudo
+     * @throws DataException Si il ne trouve pas l'user
      */
     private String getUsernameById(String idUser) throws DataException {
         Long id = Long.valueOf(idUser);
@@ -72,6 +73,7 @@ public class GitController {
      *
      * @param idRepository id de l'user
      * @return nom du repository
+     * @throws DataException si il ne trouve pas le repository
      */
     private String getNameRepositoryById(String idRepository) throws DataException {
         Long id = Long.valueOf(idRepository);
@@ -87,6 +89,7 @@ public class GitController {
      * @param idRepository l'id du dépôt
      * @param revision     la revision spéficiée
      * @param path         l'addresse du fichier
+     * @param currentUser L'utilisateur connecté
      * @return une chaîne de characteres en format json
      */
     @RequestMapping(value = "/{revision}", method = RequestMethod.GET, produces = GitConstantes.APPLICATION_JSON_UTF8)
@@ -269,6 +272,8 @@ public class GitController {
      * @param idUser       l'id de l'utilisateur
      * @param idRepository l'id du dépôt
      * @param branch       le nom de la branche
+     * @param currentUser L'utilisateur connecté
+     * @param message le message de commit
      * @return une chaîne de charactères en format json
      */
     @RequestMapping(value = "/makeCommit/{branch}", method = RequestMethod.POST, produces = GitConstantes.APPLICATION_JSON_UTF8)
@@ -316,6 +321,7 @@ public class GitController {
      * @param idUser       l'id de l'utilisateur
      * @param idRepository l'id du dépôt
      * @param revision     la revision spéficiée
+     * @param currentUser L'utilisateur connecté
      * @return une chaîne de characteres en format json
      */
     @RequestMapping(value = "/showCommit/{revision}", method = RequestMethod.GET, produces = GitConstantes.APPLICATION_JSON_UTF8)
@@ -377,6 +383,7 @@ public class GitController {
      * @param idUser       l'id de l'utilisateur
      * @param idRepository l'id du dépôt
      * @param url          l'addresse
+     * @param type  le type de projet cloné
      * @return une chaîne de characteres en format json
      */
     //ATENTION : pour cette requête : idUser = L'utilisateur en cours. En effet, on créé un nouveau dépot. C'est le current user qui est donc creator
@@ -522,7 +529,7 @@ public class GitController {
      * @param currentUser  l'utilisateur courant, celui qui fait la requete
      * @param idRepository l'id du repository courant
      * @param path         le chemin du nouveau fichier
-     * @return
+     * @return un json avec le code de réussite de création de fichier
      */
     @RequestMapping(value = "/create/file/{branch}", method = RequestMethod.GET, produces = GitConstantes.APPLICATION_JSON_UTF8)
     @ResponseBody

@@ -53,7 +53,7 @@
                     </form>
 
                     <!-- Lance le modal -->
-                    <a data-toggle="modal" data-target="#oubliePassword" id="aOubliePassword">Mot de passe Oublié ?</a>
+                    <!-- <a data-toggle="modal" data-target="#oubliePassword" id="aOubliePassword">Mot de passe Oublié ?</a> -->
                 </section>
 
                 <section class="col-lg-6 col-xs-6" id="divInscription">

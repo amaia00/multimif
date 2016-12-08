@@ -19,8 +19,8 @@ public class JsonUtil<T> {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     /**
-     * @param object
-     * @return
+     * @param object L'object a convertir
+     * @return Un string contenant un json
      */
     public static String convertToJson(Object object) {
         String json;

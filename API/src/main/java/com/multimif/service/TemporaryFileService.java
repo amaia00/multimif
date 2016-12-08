@@ -99,7 +99,8 @@ public interface TemporaryFileService {
     /**
      * Permet de supprimer une liste de TemporaryFile
      * @param list Liste des objets à supprimer
-     * @throws Exception
+     * @throws DataException Si l'entité n'est pas supprimée
+     * @return vrai si l'entité est supprimée
      */
     boolean deleteAllEntity(List<TemporaryFile> list) throws DataException;
 }

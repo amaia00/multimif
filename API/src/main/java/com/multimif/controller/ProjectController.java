@@ -34,6 +34,7 @@ public class ProjectController {
      *
      * @param idUser id de l'user
      * @return son pseudo
+     * @throws DataException Si il ne trouve pas l'user
      */
     private String getUsernameById(String idUser) throws DataException {
         Long id = Long.valueOf(idUser);
@@ -47,6 +48,7 @@ public class ProjectController {
      *
      * @param idRepository id de l'user
      * @return nom du repository
+     * @throws DataException si il ne trouve pas le repository
      */
     private String getNameRepositoryById(String idRepository) throws DataException {
         Long id = Long.valueOf(idRepository);

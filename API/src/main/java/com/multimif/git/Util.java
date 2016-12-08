@@ -53,6 +53,8 @@ public class Util {
      * @param creator l'id de l'utilisateur qui a créé le projet
      * @param repository l'id du repository
      * @param revision l'id de la revision (commit) dont on souhaite récuperer l'arborescence
+     * @param list la liste des fichier temporaires
+     * @param usetemporaryFiles Oui si on utilise des fichiers temporaires, non sinon
      * @return un nouvel objet Json contenant l'arborescence du projet pour la révision donnée
      */
     public static JsonObject getArborescence(String creator,
@@ -127,7 +129,7 @@ public class Util {
      * @param creator l'id de l'utilisateur qui a créé le dépot
      * @param repository l'id du repo
      * @return True si le repo a été supprimé, false sinon
-     * @throws DataException
+     * @throws DataException Si le repository n'est pas supprimé
      */
     public static boolean deleteRepository(String creator,
                                            String repository) throws DataException {
@@ -143,7 +145,8 @@ public class Util {
      * @param creator id de l'utilisateur qui créé le repo
      * @param newRepo id du nouveau Repo
      * @param remoteURL URL du repo distant
-     * @throws Exception
+     * @throws DataException Si le dossier n'est pas cloné
+     * @return un objet JSON
      */
     public static JsonObject cloneRemoteRepo(String creator,
                                        String newRepo,
@@ -194,10 +197,10 @@ public class Util {
      *
      * @param creator l'id de l'utilisateur qui a créé le dépot
      * @param repo l'id du repo
-     * @param revision
-     * @param path
-     * @return
-     * @throws IOException
+     * @param revision la revision du commit
+     * @param path le chemin du fichier
+     * @return un objet JSON
+     * @throws IOException si le fichier n'a pas pu être ouvert
      */
     public static JsonObject getContent(String creator,
                                         String repo,
@@ -215,8 +218,6 @@ public class Util {
 
     /**
      * Créer une branche
-     *
-     * /git/<creator>/<depot>/create/branch/<branch>
      *
      * @param creator utilisateur proprietaire du depot
      * @param repo    nom du depot
@@ -284,7 +285,7 @@ public class Util {
      * @param creator utilisateur proprietaire du depot
      * @param repo    nom du depot
      * @return un code de réponse renvoyé un json
-     * @throws Exception
+     * @throws Exception Si le repository n'est pas crée
      */
     public static JsonObject createRepository(String creator,
                                               String repo) throws Exception {
@@ -324,13 +325,11 @@ public class Util {
     /**
      * Montre les diff entre un commit et son/ses parent(s)
      *
-     * /git/<creator>/<depot>/showCommit/<revision>
-     *
      * @param creator   utilisateur proprietaire du depot
      * @param repo      nom du depot
      * @param revision  string id du commit sujet (le commit sujet est le commit dont on veut le diff avec ses parents)
      * @return un code de réponse renvoyé un json
-     * @throws Exception
+     * @throws Exception si le commit ne peut pas être récupérer
      */
     public static JsonObject showCommit(String creator,
                                         String repo,
@@ -433,9 +432,9 @@ public class Util {
 
     /**
      * @param repository le dépôt
-     * @param objectId
-     * @return
-     * @throws IOException
+     * @param objectId le commit id
+     * @return Un arbre
+     * @throws IOException si l'arbre ne peut pas ouvrir l'aborescence
      */
     private static AbstractTreeIterator prepareTreeParser(Repository repository,
                                                           RevCommit objectId) throws IOException {
@@ -456,8 +455,8 @@ public class Util {
     /**
      * @param creator le proprietaire du dépôt
      * @param repo le dépôt
-     * @return
-     * @throws Exception
+     * @return Un json contenant les branches
+     * @throws Exception Si il ne trouve pas les branches
      */
     public static JsonObject getBranches(String creator,
                                          String repo) throws Exception {
@@ -479,8 +478,8 @@ public class Util {
      * @param creator le proprietaire du dépôt
      * @param repo le dépôt
      * @param branch le nom de la branche
-     * @return
-     * @throws DataException
+     * @return un json contenant les commits
+     * @throws DataException Si il ne trouve pas les commits
      */
     public static JsonObject getCommits(String creator,
                                         String repo,
@@ -525,10 +524,10 @@ public class Util {
     /**
      * @param creator le proprietaire du dépôt
      * @param repo le dépôt
-     * @param nomBranch1 e nom de la branche1
+     * @param nomBranch1 le nom de la branche1
      * @param branch2 le nom de la branche2
-     * @return
-     * @throws Exception
+     * @return un json contenant le résultat du merge
+     * @throws Exception Si le merge a échoué
      */
     public static JsonObject merge(String creator, String repo, String nomBranch1, String branch2) throws Exception {
         Git git = Git.open(new File(GitConstantes.REPOPATH + creator + "/" + repo + ".git"));
@@ -599,8 +598,8 @@ public class Util {
      * @param creator le proprietaire du dépôt
      * @param repo le dépôt
      * @param revision la revision spécifiée
-     * @return
-     * @throws IOException
+     * @return un json contenant les info du commit
+     * @throws IOException si il n'arrive pas ouvrir le commit
      */
     public static JsonObject getInfoCommit(String creator, String repo, String revision) throws IOException {
 

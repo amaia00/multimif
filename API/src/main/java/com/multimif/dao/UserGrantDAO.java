@@ -22,7 +22,6 @@ public interface UserGrantDAO {
      *
      * @param grant l'entité de UserGrant
      * @return true si la transaction a fini correctement
-     * @throws DataException
      */
     boolean addEntity(UserGrant grant);
 
@@ -33,7 +32,6 @@ public interface UserGrantDAO {
      *
      * @param user l'entité de User
      * @return la liste de permis associés à l'utilisateur
-     * @throws DataException
      */
     List<UserGrant> getProjectsByEntity (User user);
 
@@ -44,7 +42,7 @@ public interface UserGrantDAO {
      *
      * @param idProject l'id du projet
      * @return une liste de permis
-     * @throws DataException
+     * @throws DataException si l'entité n'est pas trouvée
      */
     List<UserGrant> getDevelopersByEntity(Long idProject) throws DataException;
 
@@ -65,8 +63,7 @@ public interface UserGrantDAO {
      *
      * @param idProject l'id du projet
      * @return le permis avec l'utilisateur qui es l'administrateur du projet
-     * @throws  DataException retourne une exception s'il n'y a pas de
-     * administrateur du projet
+     * @throws DataException si l'entité n'est pas trouvée
      */
     UserGrant getAdminByEntity(Long idProject) throws DataException;
 
@@ -78,7 +75,7 @@ public interface UserGrantDAO {
      * @param idUser l'id de l'utilisateur
      * @param idProject l'id du projet
      * @return le permis entre l'utilisateur et le projet
-     * @throws DataException retourne une exception si le permis n'existe pas
+     * @throws DataException si l'entité n'est pas trouvée
      */
     UserGrant getEntityById(Long idUser, Long idProject) throws DataException;
 

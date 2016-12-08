@@ -1,0 +1,8 @@
+com.multimif.compilation
+com.multimif.controller
+com.multimif.dao
+com.multimif.filter
+com.multimif.git
+com.multimif.model
+com.multimif.service
+com.multimif.util

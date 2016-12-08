@@ -50,6 +50,7 @@ public class Project implements Serializable {
      *
      * @param name le nom du projet
      * @param type le type du code
+     * @param idCreator l'id du createur du repository
      */
     public Project(String name, TypeProject type, Long idCreator) {
         this.name = name;

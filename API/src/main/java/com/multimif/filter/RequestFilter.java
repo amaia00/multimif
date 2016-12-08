@@ -31,7 +31,7 @@ public class RequestFilter implements Filter{
 
     /**
      * Définit la configuraiton du filter
-     * @param config
+     * @param config la config de la servlet
      */
     public void setFilterConfig(FilterConfig config) {
         this.config = config;
@@ -39,7 +39,7 @@ public class RequestFilter implements Filter{
 
     /**
      * Renvoi la configuration du filter
-     * @return
+     * @return la config de la servlet
      */
     public FilterConfig getFilterConfig() {
         return config;
@@ -47,11 +47,11 @@ public class RequestFilter implements Filter{
 
     /**
      * Execute le filter
-     * @param req
-     * @param res
-     * @param chain
-     * @throws java.io.IOException
-     * @throws ServletException
+     * @param req la requête
+     * @param res la réponse
+     * @param chain le chaine
+     * @throws java.io.IOException si il ne peut pas écrire la réponse
+     * @throws ServletException si il n'arrive pas a accéder a la servlet
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
                                     throws java.io.IOException, ServletException {
@@ -110,15 +110,28 @@ public class RequestFilter implements Filter{
         chain.doFilter(req,res);*/
     }
 
+    /**
+     * Intialise le filter
+     * @param config la config de la servlet
+     * @throws ServletException erreur dans la servlet
+     */
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
         userService = new UserServiceImpl();
     }
 
+    /**
+     * Détruit le filter
+     */
     public void destroy() {
     }
 
-    // Renvoi une erreur si pas connecté
+    /**
+     * Renvoi une erreur si l'utilisateur n'est pas connecté
+     * @param response la requete réponse
+     * @param message le message d'erreur
+     * @throws java.io.IOException si il n'arrive pas a ecrire la réponse
+     */
     private void unauthorized(HttpServletResponse response, String message) throws java.io.IOException {
         System.out.println("[API] [FILTER] [ERROR] user not connected.");
         response.sendError(401, message);

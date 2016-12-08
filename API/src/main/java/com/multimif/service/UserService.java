@@ -57,6 +57,7 @@ public interface UserService {
     /**
      * @param username le pseudo de l'utilisateur
      * @param password le mot de passe de l'utilisateur
+     * @param hash oui si le password est un hash, non sinon
      * @return l'entité de l'utilisateur
      * @throws DataException une exception si le password envoyé ne correspond pas
      * avec lequel qui est dans la base de données

@@ -43,6 +43,7 @@ public interface UserDAO {
      *
      * @param username le pseudo de l'utilisateur
      * @param password le mot de passe de l'utilisateur
+     * @param hash Oui si le password est un hash, non sinon
      * @return l'entité User s'il trouve une utilisateur avec le pseudo et le
      * mot de passe indiqué
      * @throws DataException retourne une exception si l'utilisateur n'existe
