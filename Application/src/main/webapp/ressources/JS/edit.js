@@ -13,7 +13,7 @@ $("#ancrePanelGauche").click(deroulerPanelGauche);
 $("#changerTheme").change(changerTheme);
 $("#tauxIndentation").change(changerIndentation);
 $("#btnAutoIndent").click(indenterEditeur);
-$("#btnCompiler").click(compilerProjet);
+//$("#btnCompiler").click(compilerProjet);
 
 function deroulerPanelDroite() {
     if (!deroulerDroite) {
@@ -109,6 +109,7 @@ function changerIndentation() {
     editeur.setOption("indentUnit", parseInt(inputChangerIndentation.options[inputChangerIndentation.selectedIndex].value));
     indenterEditeur();
 }
+/*
 function compilerProjet(){
     document.getElementById('contenuCompilation').innerHTML = "Vous avez cliquez sur le bouton 'Compiler' !";
-}
+}*/
