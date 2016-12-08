@@ -75,6 +75,13 @@ function createFile(idProject,idCreator, idUser,path,branch){
     var url = "/api/git/"+  idUser+ "/"+ idCreator + "/" + idProject + "/create/file/" + branch +"?path=" + path;
     ApiRequest('GET',url,"",function(json){
             console.log("Fichier: " + JSON.stringify(json));
+            BootstrapDialog.show({
+                title: 'Fichiers',
+                message: path + ' a été créee.',
+                type: BootstrapDialog.TYPE_SUCCESS,
+                closable: true,
+                draggable: true
+            });
             getArborescence(Cookies.get('project'),Cookies.get('creator'),Cookies.get('idUser'),Cookies.get('revision'));
     });
 }
