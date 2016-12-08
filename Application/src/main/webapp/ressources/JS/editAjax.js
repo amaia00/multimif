@@ -132,17 +132,29 @@ function edit(idProject,idUser,idCreator,branch,path,content,temporary){
     }else{
         var url = "/api/file/"+idUser+"/"+idCreator+"/" + idProject + "/"+branch+ "/edit?path="+path+ "&content=" + content;
     }
-    
-    ApiRequest('POST',url,"",function(json){
-        console.log("Edition: " + JSON.stringify(json));
+
+    if(str.length == 0){
         BootstrapDialog.show({
-            title: 'Fichier',
-            message: 'Le fichier a été sauvegardé',
-            type: BootstrapDialog.TYPE_SUCCESS,
+            title: 'Fichiers',
+            message: 'Vous n\'avez pas de fichier ouvert',
+            type: BootstrapDialog.TYPE_DANGER,
             closable: true,
             draggable: true
         });
-    });
+    }else{
+        ApiRequest('POST',url,"",function(json){
+            console.log("Edition: " + JSON.stringify(json));
+            BootstrapDialog.show({
+                title: 'Fichier',
+                message: 'Le fichier a été sauvegardé',
+                type: BootstrapDialog.TYPE_SUCCESS,
+                closable: true,
+                draggable: true
+            });
+        });
+    }
+    
+
 }
 
 function compiler(idCreator,idProject,branch){

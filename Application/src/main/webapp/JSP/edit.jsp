@@ -139,6 +139,10 @@
             <section class="row">
                     <div class="col-lg-6 col-lg-offset-1" id="editeurJava">
                         <textarea id="java-code">
+
+                        </textarea>
+                    </div>
+<!--
 import com.demo.util.MyType;
 import com.demo.util.MyInterface;
 
@@ -160,9 +164,7 @@ public MyType method() {
 return member;
 }
 }
-                        </textarea>
-                    </div>
-
+-->
                     <!-- Sortie de compilation -->
                     <div class="col-lg-4" id="contenuCompilation">
                         <%--<p> Sortie du compilateur</p>--%>
