@@ -98,7 +98,7 @@ $(document).ready(function() {
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
         var path = Cookies.get('path');
-        var content = editeur.getDoc().getValue();
+        var content = editeur.getValue();
         var temporary = Cookies.get('temporary');
         edit(idProject,idUser,idCreator,branch,path,content,temporary)
     });
@@ -133,15 +133,6 @@ function edit(idProject,idUser,idCreator,branch,path,content,temporary){
         var url = "/api/file/"+idUser+"/"+idCreator+"/" + idProject + "/"+branch+ "/edit?path="+path+ "&content=" + content;
     }
 
-    if(str.length == 0){
-        BootstrapDialog.show({
-            title: 'Fichiers',
-            message: 'Vous n\'avez pas de fichier ouvert',
-            type: BootstrapDialog.TYPE_DANGER,
-            closable: true,
-            draggable: true
-        });
-    }else{
         ApiRequest('POST',url,"",function(json){
             console.log("Edition: " + JSON.stringify(json));
             BootstrapDialog.show({
@@ -152,9 +143,6 @@ function edit(idProject,idUser,idCreator,branch,path,content,temporary){
                 draggable: true
             });
         });
-    }
-    
-
 }
 
 function compiler(idCreator,idProject,branch){
