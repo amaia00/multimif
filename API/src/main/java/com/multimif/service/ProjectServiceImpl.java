@@ -38,15 +38,20 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = new Project(name, type, idUser);
 
         try {
-            /* Creation dans la BD */
-            ok = projectDAO.addEntity(project);
+            projectDAO.addEntity(project);
+        }catch (DataException e){
+            LOGGER.log(Level.FINE, e.toString(), e);
+            throw new DataException(e.getMessage());
+        }
 
+
+        try {
+            /* Creation dans la BD */
             if (!userGrantService.existsProjectName(idUser, project.getName())) {
                 System.out.println("nons");
                 /* On cree le rapport du projet avec l'admin */
                 userGrantService.addEntity(idUser, project.getIdProject(), UserGrant.PermissionType.ADMIN);
             } else {
-                System.out.println("existe deja");
                 throw new DataException(Messages.PROJECT_NAME_ALREADY_EXISTS);
             }
         } catch (DataException e) {

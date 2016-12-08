@@ -646,6 +646,7 @@ public class Util {
                 output = new PrintStream(fos);
                 output.print(file.getContent());
                 output.close();
+                fos.close();
 
             }
             System.out.println("ici");

@@ -33,7 +33,7 @@ class DAO {
      */
     void closeEntityManager(){
         try {
-            if (em.isOpen()) {
+            if (em != null && em.isOpen()) {
                 em.close();
             }
         }catch (Exception e){
