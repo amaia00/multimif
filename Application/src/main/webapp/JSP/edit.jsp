@@ -166,7 +166,7 @@ return member;
                     <!-- Sortie de compilation -->
                     <div class="col-lg-4" id="contenuCompilation">
                         <%--<p> Sortie du compilateur</p>--%>
-                        <script type="text/javascript" src="https://asciinema.org/a/bntvk9cecmkyl95buo738zueh.js" id="asciicast-btnyyqffqbvt2tzo4oo15mgc6" data-theme="solarized-dark" data-autoplay="true" async></script>
+                        <script type="text/javascript" src="https://asciinema.org/a/bntvk9cecmkyl95buo738zueh.js" id="asciicast-bntvk9cecmkyl95buo738zueh" data-theme="solarized-dark" data-autoplay="true" async></script>
                     </div>
             </section>
             <!-- Fin compilation -->
