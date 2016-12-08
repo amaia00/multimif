@@ -76,6 +76,13 @@ $(document).ready(function() {
         var idCreator = Cookies.get('creator');
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
+        BootstrapDialog.show({
+            title: 'Attention',
+            message: 'N\'oublier pasde créer votre makefile ou pom.xml avant de compiler! ',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true
+        });
         compiler(idCreator,idProject,branch);
     });
 });
