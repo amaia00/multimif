@@ -82,11 +82,12 @@ function changerTheme(){
 }
 
 /* Enregistrement automatique de l'éditeur toutes les 30 secondes */
+/*
 window.setInterval(function(){
     //TODO
     editeur.getDoc().getValue();
    // console.log(editeur.getDoc().getValue());//Permet d'avoir le contenu de l'éditeur
-}, 30000);
+}, 30000);*/
 
 
 

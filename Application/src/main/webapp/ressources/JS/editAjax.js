@@ -66,7 +66,7 @@ $(document).ready(function() {
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
         var path = Cookies.get('path');
-        var content = editeur.getValue();
+        var content = editeur.getDoc().getValue();
         var temporary = Cookies.get('temporary');
         edit(idProject,idUser,idCreator,branch,path,content,temporary)
     });

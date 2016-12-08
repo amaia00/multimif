@@ -63,8 +63,6 @@ function getArborescence(idProject,idCreator, idUser,revision){
         // Handle a click on the edit link
         $('#arborescenceFichier').on('dblclick', function(e) {
                 // Get the id from the 'node-id' data property
-                alert($(e.target).attr("path"),$(e.target).attr("revision"));
-
                 getFile(idProject,idCreator,idUser,$(e.target).attr("revision"),$(e.target).attr("path"),$(e.target).attr("temporary"))
 
             }

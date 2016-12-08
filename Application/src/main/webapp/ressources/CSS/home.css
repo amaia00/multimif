@@ -107,5 +107,5 @@ BODY{
 }
 
 #diffButton{
-    cursor:pointer;
+    cursor:pointer !important;
 }
