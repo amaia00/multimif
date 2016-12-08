@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Created by Alexis on 05/12/2016.
+ * Controleur pour les archives ZIP
  */
 @RestController
 @RequestMapping("/zipFiles")

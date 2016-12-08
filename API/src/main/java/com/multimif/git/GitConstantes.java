@@ -1,11 +1,8 @@
 package com.multimif.git;
 
 /**
- * @author p1317074
- * @version 1.0
- * @since 1.0 15/11/16.
+ * Contient les constantes pour GIT
  */
-
 public class GitConstantes {
 
     public static final String REPOPATH = "repositories/";

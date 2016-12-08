@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Mahmoud on 15/11/2016.
+ * Controleur pour la compilation
  */
 @RestController
 @RequestMapping("/compile/{idCurrentUserStr}/{idProjectStr}/{branch}")

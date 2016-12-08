@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 
+/**
+ * Construit une node pour l'arborescence
+ */
 public class ArboNode {
 
     List<ArboNode> childs;

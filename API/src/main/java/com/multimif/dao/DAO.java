@@ -5,9 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author p1317074
- * @version 1.0
- * @since 1.0 19/10/16.
+ * Class permettant de créer la persistence
  */
 class DAO {
     private static final Logger LOGGER = Logger.getLogger(DAO.class.getName());

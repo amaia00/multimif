@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author p1317074
- * @version 1.0
- * @since 1.0 16/11/16.
+ * Construit un arbre pour l'arborescence
  */
 public class ArboTree {
 

@@ -6,6 +6,7 @@ import com.multimif.util.DataException;
 import java.util.List;
 
 /**
+ * Classe contenant les service d'un utilisateur
  * @author Amaia Nazábal
  * @version 1.0
  * @since 1.0 10/19/16.

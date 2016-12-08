@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
- * Implementation de méthodes
+ * Implementation de méthodes de UserGrantDAO
  *
  * @author Amaia Nazábal
  * @version 1.0

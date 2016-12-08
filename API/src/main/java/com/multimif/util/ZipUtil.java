@@ -17,6 +17,7 @@ import java.util.zip.ZipOutputStream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
+ * Permet la compression d'un projet dans un fichier zip
  * @author Amaia Nazábal
  * @version 1.0
  * @since 1.0 11/23/16.

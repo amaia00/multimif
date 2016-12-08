@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Implemente UserService
  * @author Amaia Nazábal
  * @version 1.0
  * @since 1.0 10/19/16.

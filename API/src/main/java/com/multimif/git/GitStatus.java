@@ -1,9 +1,7 @@
 package com.multimif.git;
 
 /**
- * @author hadjiszs
- * @version 1.0
- * @since 1.0 17/11/16.
+ * Contient les status de GIT
  */
 public enum GitStatus {
 

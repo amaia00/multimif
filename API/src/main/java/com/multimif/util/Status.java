@@ -1,9 +1,7 @@
 package com.multimif.util;
 
 /**
- * @author Amaia Nazábal
- * @version 1.0
- * @since 1.0 10/20/16.
+ * Permet de renvoyer un status d'erreur
  */
 public class Status {
 	private int code;

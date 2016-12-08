@@ -4,6 +4,8 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
+ * Classe qui fait le lien entre les droit d'un projet et un user
+ *
  * @author Amaia Nazábal
  * @version 1.0
  * @since 1.0 10/20/16.

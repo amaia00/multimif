@@ -17,9 +17,7 @@ import static com.multimif.util.Constantes.*;
 
 
 /**
- * @author Mahmoud
- * @version 1.0
- * @since 1.0 15/11/2016.
+ * Class permettant la compilation d'un projet
  */
 public class Compile {
 

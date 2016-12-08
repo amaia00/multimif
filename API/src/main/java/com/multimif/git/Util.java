@@ -33,11 +33,8 @@ import java.util.logging.Logger;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 
 /**
- * @author p1317074
- * @version 1.0
- * @since 1.0 15/11/16.
+ * Class contenant les différentes actions pour GIT
  */
-
 public class Util {
 
     private static final Logger LOGGER = Logger.getLogger(Util.class.getName());

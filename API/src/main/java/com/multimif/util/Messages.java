@@ -1,9 +1,7 @@
 package com.multimif.util;
 
 /**
- * @author Amaia Nazábal
- * @version 1.0
- * @since 1.0 11/21/16.
+ * Les différents messages d'erreur levé
  */
 public class Messages {
 

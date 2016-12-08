@@ -1,9 +1,7 @@
 package com.multimif.util;
 
 /**
- * @author Amaia Nazabal
- * @version 1.0
- * @since 1.0 10/20/16.
+ * Constantes utilisées dans les classes
  */
 public class Constantes {
     private static final String USER_DIRECTORY = "user.dir";

@@ -10,9 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Amaia Nazábal
- * @version 1.0
- * @since 1.0 10/20/16.
+ * Fournit des fonctions de conversion en JSON
+ * @param <T>
  */
 public class JsonUtil<T> {
 

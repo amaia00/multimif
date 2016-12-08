@@ -9,12 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Alexis
- * @version 1.0
- * @since 1.0 16/11/2016.
- */
-
-/**
  * Filtre les requêtes entrantes et vérifie que l'utilisateur est connecté.
  */
 public class RequestFilter implements Filter{

@@ -23,9 +23,6 @@ import java.util.logging.Logger;
  *
  * Le controleur pour la gestion de permis entre les utilisateurs et les projets
  *
- * @author Amaia Nazábal
- * @version 1.0
- * @since 1.0 11/16/16.
  */
 @RestController
 @RequestMapping("/permissions")

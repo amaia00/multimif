@@ -22,9 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author p1317074
- * @version 1.0
- * @since 1.0 16/11/16.
+ * Controleur pour les actions git
  */
 @Controller
 // currentUser = celui qui a la session

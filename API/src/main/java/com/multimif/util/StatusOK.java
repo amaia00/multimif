@@ -1,9 +1,7 @@
 package com.multimif.util;
 
 /**
- * @author Amaia Nazábal
- * @version 1.0
- * @since 1.0 11/15/16.
+ * Renvoi un status valide
  */
 public class StatusOK extends Status {
     private Long id;
