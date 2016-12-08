@@ -56,6 +56,13 @@ $(document).ready(function() {
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
         var message = $("#messageCommit").val();
+        BootstrapDialog.show({
+            title: 'Attention',
+            message: 'N\'oublier pas de sauver vos fichier en cours d\'edition avant de commit !',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true
+        });
         makeCommit(idProject,idCreator, idUser,branch,message)
     });
 
