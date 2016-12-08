@@ -203,7 +203,7 @@ return member;
                     <div class="modal-body">
                         <form class="form-group">
                             <input class="form-control" type="text" placeholder="Votre message de commit .." name="messageCommit" id="messageCommit"/>
-                            <input  class="btn btn-primary" id="envoyerCommit" type="submit" value="Commit" />
+                            <button  class="btn btn-primary" id="envoyerCommit" type="submit">Commit</button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -226,7 +226,7 @@ return member;
                     <div class="modal-body">
                         <form id="createBranch-modal" class="form-group">
                             <input class="form-group" type="text" placeholder="Nom de la branche" name="newBranch" id="nomBranche"/>
-                            <input  class="btn btn-primary" id="createBranch-button" type="submit" value="Créer" />
+                            <button class="btn btn-primary" id="createBranch-button" type="submit">Créer</button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -248,8 +248,8 @@ return member;
                     </div>
                     <div class="modal-body">
                         <form id="createFile-modal" class="form-group">
-                            <input class="form-control" type="text" placeholder="Nom de la branche" name="newBranch" id="nomFichier"/>
-                            <input class="btn btn-primary" id="createFile-button" type="submit" value="Créer" />
+                            <input class="form-control" type="text" placeholder="Nom du fichier" name="newFichier" id="nomFichier"/>
+                            <button class="btn btn-primary" id="createFile-button" type="submit">Créer</button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -271,7 +271,7 @@ return member;
                     <div class="modal-body">
                         <form id="createDossier-modal" class="form-group">
                             <input class="form-control" type="text" placeholder="nom de la branche" name="newBranch" id="nomDossier"/>
-                            <input  class="btn btn-primary" id="createDossier-button" type="submit" value="Créer" />
+                            <button  class="btn btn-primary" id="createDossier-button" type="submit">Créer</button>
                         </form>
                     </div>
                     <div class="modal-footer">
