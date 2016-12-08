@@ -3,6 +3,37 @@ $(document).ready(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
+    /// MEssage de warning
+    $("#btnCreerBranche").on("click", function(){
+        BootstrapDialog.show({
+            title: 'Attention',
+            message: 'N\'oublier pas de sauver et commit vos fichier en cours d\'edition avant de changer de branche !',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true
+        });
+    });
+
+    $("#btnCompiler").on("click", function () {
+        BootstrapDialog.show({
+            title: 'Attention',
+            message: 'N\'oublier pasde créer votre makefile ou pom.xml avant de compiler! ',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true
+        });
+    });
+
+    $("#btnCommit").on("click", function () {
+        BootstrapDialog.show({
+            title: 'Attention',
+            message: 'N\'oublier pas de sauver vos fichier en cours d\'edition avant de commit !',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true
+        });
+    });
+
     // Si on selectionne une branche
     $("#selectBranch").on("change",function(e){
         e.preventDefault();
@@ -20,6 +51,7 @@ $(document).ready(function() {
         var idCreator = Cookies.get('creator');
         var idUser = Cookies.get('idUser');
         var idProject = Cookies.get('project');
+
         createBranch($("#nomBranche").val(), idProject, idCreator, idUser);
     });
 
@@ -56,13 +88,6 @@ $(document).ready(function() {
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
         var message = $("#messageCommit").val();
-        BootstrapDialog.show({
-            title: 'Attention',
-            message: 'N\'oublier pas de sauver vos fichier en cours d\'edition avant de commit !',
-            type: BootstrapDialog.TYPE_WARNING,
-            closable: true,
-            draggable: true
-        });
         makeCommit(idProject,idCreator, idUser,branch,message)
     });
 
@@ -83,13 +108,6 @@ $(document).ready(function() {
         var idCreator = Cookies.get('creator');
         var idProject = Cookies.get('project');
         var branch = Cookies.get('branch');
-        BootstrapDialog.show({
-            title: 'Attention',
-            message: 'N\'oublier pasde créer votre makefile ou pom.xml avant de compiler! ',
-            type: BootstrapDialog.TYPE_WARNING,
-            closable: true,
-            draggable: true
-        });
         compiler(idCreator,idProject,branch);
     });
 });
