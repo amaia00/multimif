@@ -118,8 +118,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="ligneBtnCreer" id="btnCreerFichier" data-toggle="modal" data-target="#fenetreFichier"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Fichier</a></li>
-                                <li class="ligneBtnCreer" id="btnCreerDossier" data-toggle="modal" data-target="#fenetreDossier"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Dossier</a></li>
+                                <li class="ligneBtnCreer" id="btnCreerFichier" data-toggle="modal" data-target="#fenetreFichier"><a><i class="fa fa-file-code-o" aria-hidden="true"></i> Fichier</a></li>
+                                <li class="ligneBtnCreer" id="btnCreerDossier" data-toggle="modal" data-target="#fenetreDossier"><a><i class="fa fa-folder" aria-hidden="true"></i> Dossier</a></li>
                                 <li class="ligneBtnCreer" id="btnCreerBranche" data-toggle="modal" data-target="#fenetreBranche"><a><i class="fa fa-code-fork" aria-hidden="true"></i> Branche</a></li>
                             </ul>
                         </div>
@@ -201,9 +201,9 @@ return member;
                         <h4 class="modal-title">Ajouter un message pour votre Commit</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <input type="text" placeholder="Votre message de commit .." name="messageCommit" id="messageCommit"/>
-                            <input  class="btn btn-success" id="envoyerCommit" type="submit" value="Envoyer" />
+                        <form class="form-group">
+                            <input class="form-control" type="text" placeholder="Votre message de commit .." name="messageCommit" id="messageCommit"/>
+                            <input  class="btn btn-primary" id="envoyerCommit" type="submit" value="Commit" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -224,9 +224,9 @@ return member;
                         <h4 class="modal-title">Créer une nouvelle branche</h4>
                     </div>
                     <div class="modal-body">
-                        <form id="createBranch-modal">
-                            <input type="text" placeholder="nom de la branche" name="newBranch" id="nomBranche"/>
-                            <input  class="btn btn-success" id="createBranch-button" type="submit" value="Envoyer" />
+                        <form id="createBranch-modal" class="form-group">
+                            <input class="form-group" type="text" placeholder="Nom de la branche" name="newBranch" id="nomBranche"/>
+                            <input  class="btn btn-primary" id="createBranch-button" type="submit" value="Créer" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -247,9 +247,9 @@ return member;
                         <h4 class="modal-title">Créer un nouveau fichier</h4>
                     </div>
                     <div class="modal-body">
-                        <form id="createFile-modal">
-                            <input type="text" placeholder="nom de la branche" name="newBranch" id="nomFichier"/>
-                            <input  class="btn btn-success" id="createFile-button" type="submit" value="Envoyer" />
+                        <form id="createFile-modal" class="form-group">
+                            <input class="form-control" type="text" placeholder="Nom de la branche" name="newBranch" id="nomFichier"/>
+                            <input class="btn btn-primary" id="createFile-button" type="submit" value="Créer" />
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -269,9 +269,9 @@ return member;
                         <h4 class="modal-title">Créer un nouveau dossier</h4>
                     </div>
                     <div class="modal-body">
-                        <form id="createDossier-modal">
-                            <input type="text" placeholder="nom de la branche" name="newBranch" id="nomDossier"/>
-                            <input  class="btn btn-success" id="createDossier-button" type="submit" value="Envoyer" />
+                        <form id="createDossier-modal" class="form-group">
+                            <input class="form-control" type="text" placeholder="nom de la branche" name="newBranch" id="nomDossier"/>
+                            <input  class="btn btn-primary" id="createDossier-button" type="submit" value="Créer" />
                         </form>
                     </div>
                     <div class="modal-footer">
